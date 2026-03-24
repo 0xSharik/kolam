@@ -1,56 +1,64 @@
-# Zen Kolam - Traditional Pattern Generator
+# HEADACHE // DIGITAL KOLAM INSTALLATION
 
-A modern Next.js application for generating, displaying, and exporting traditional South Indian kolam patterns. Create beautiful geometric patterns with dots and lines, animate them, and export as SVG or PNG.
+> **STATUS**: V1.0.4-STABLE // CORE: 0xFD44 // BUS: ACTIVE
 
-## Features
+A high-fidelity **Subliminal Neon Glitch-Art** experience. **HEADACHE** breathes digital life into the ancient South Indian tradition of Kolam, transforming mathematical symmetry into a pulsing, reactive installation.
 
-- 🎨 **Advanced Kolam Generation**: Create authentic kolam patterns using algorithms with 16 curve types
-- 🔬 **Mathematical Precision**: Connectivity rules ensure proper pattern flow and traditional aesthetics  
-- 🔄 **Symmetry Control**: Generate symmetrical patterns with automatic mirroring
-- 📐 **Smooth Curves**: Vector-based curved lines using SVG paths for authentic traditional appearance
-- ✨ **Smooth Animations**: Watch patterns come to life with progressive drawing animations
-- 📤 **Multiple Export Formats**: Download your creations as SVG, or PNG
-- 🔗 **Easy Embedding**: Get embed codes to use kolams on other websites
-- 📱 **Responsive Design**: Works beautifully on desktop and mobile devices
-- ⚡ **Fast Performance**: SVG-based rendering for optimal performance
+![HEADACHE BRAND ICON](file:///C:/Users/Acer/.gemini/antigravity/brain/73d7df59-3b39-4fd4-b246-f1938a23ac0d/headache_favicon_1774364910609.png)
 
-## Technologies Used
+---
 
-- **Next.js 15+** with App Router
-- **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **SVG** for 2D drawing and animations
-- **html2canvas** for SVG to canvas conversion
+## ⚡ THE USP
 
-## Getting Started
+### 1. Mathematical Integrity
+Unlike typical "Generative AI" that hallucinates patterns, **HEADACHE** uses a **Deterministic Tiling Engine**. Every line is 100% geometrically valid, obeying strict 16-tile connectivity rules. No dead-ends. No fuzzy artifacts. Just pure, clean geometry.
 
-First, install dependencies and run the development server:
+### 2. Subliminal Glitch Aesthetic
+A curated visual experience built on the **Obsidian/Magenta/Cyan** palette. Features CRT-style scanline overlays, fractal noise textures, and sharp `0px` border-radius geometry for a premium industrial feel.
+
+### 3. Reactive Installation
+Not a static generator. The interface tracks user presence via mouse-movement reactive gradients and allows for infinite "Computation" of patterns ranging from 3x3 to 15x15 neural grids.
+
+---
+
+## 🛠 TECH STACK
+
+- **Core**: Next.js 15 (App Router) + React 19
+- **Logic**: TypeScript (Deterministic Tiling Algorithm)
+- **Styling**: Tailwind CSS 4 (Custom Glitch Utility Layer)
+- **Graphics**: Scalable Vector Graphics (SVG) with CSS `stroke-dash` animations
+- **API**: Server-side SVG generation for on-demand pattern embedding
+
+---
+
+## 🚀 GETTING STARTED
 
 ```bash
+# Clone the repository
+git clone https://github.com/0xSharik/kolam.git
+cd headache
+
+# Install dependencies
 pnpm install
+
+# Port:3000 // Initiate Pulse
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+---
 
-## Usage
+## ⚙️ THE GEOMETRIC ENGINE
 
-1. **Generate Patterns**: Click on any pattern button (Square, Diamond, Star, Traditional Pulli) to create a kolam
-2. **Enable Animation**: Toggle the animation checkbox to see the pattern draw itself
-3. **Export**: Choose from SVG, PNG, or animated GIF export options
-4. **Embed**: Copy the embed code to use the kolam on other websites
+The "Neural Generator" is based on **Tiling Theory**:
+- **16-Tile DNA**: Every pattern is composed of 16 fundamental curve primitives.
+- **Mate System**: Adjacency tables (`mate_pt_dn`, `mate_pt_rt`) ensure line continuity.
+- **Symmetry Inversion**: Horizontal and Vertical matrices (`h_inv`, `v_inv`) unfold seed quadrants into full symmetrical masterpieces.
 
-## Kolam Patterns
+---
 
-### Advanced Generation Algorithm
-Based on academic research algorithms, our kolam generator uses:
-- **16 Curve Patterns**: Each grid cell can contain one of 16 mathematically defined curve patterns
-- **Connectivity Rules**: Sophisticated rules ensure patterns connect properly with neighboring cells
-- **Symmetry Generation**: Automatic 1D and 2D symmetrical pattern generation
-- **Smooth Curves**: Vector-based curved lines for authentic kolam aesthetics
+## 📜 LICENSE & TRADITION
 
-## Learn More
+This project is a digital tribute to the South Indian art of Kolam. 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- This project draws inspiration from [Kolam Generator](https://www.mathworks.com/matlabcentral/fileexchange/36451-kolam-generator)
+© 2026 **HEADACHE INSTALLATION LABS**  
+LAT: 51.5074° N // LON: 0.1278° W
