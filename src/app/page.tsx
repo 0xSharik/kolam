@@ -16,8 +16,12 @@ export default function HeadacheKolamPage() {
 				</Suspense>
 			</div>
 			
-			<footer className="p-8 flex justify-center items-center border-t border-white/5 text-[10px] font-mono opacity-30 uppercase tracking-widest bg-[#131313]">
+			<footer className="p-8 flex justify-between items-center border-t border-white/5 text-[10px] font-mono opacity-30 uppercase tracking-widest bg-[#131313]">
 				<div>© 2026 HEADACHE INSTALLATION LABS</div>
+				<div className="flex gap-4">
+					<span>LAT: 51.5074° N</span>
+					<span>LON: 0.1278° W</span>
+				</div>
 			</footer>
 		</main>
 	);
