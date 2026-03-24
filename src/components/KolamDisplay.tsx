@@ -59,8 +59,8 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 						cx={dot.center.x}
 						cy={dot.center.y}
 						r={dot.radius || 3}
-						fill={dot.filled ? (dot.color || 'white') : 'none'}
-						stroke={dot.color || 'white'}
+						fill={dot.filled ? (dot.color || 'var(--secondary)') : 'none'}
+						stroke={dot.color || 'var(--secondary)'}
 						strokeWidth={dot.filled ? 0 : 1}
 						className={animate ? 'kolam-dot-animated' : 'kolam-dot'}
 						style={
@@ -93,7 +93,7 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 							<path
 								key={curve.id}
 								d={generateSVGPath(curve.curvePoints)}
-								stroke={curve.color || 'white'}
+								stroke={curve.color || 'var(--primary)'}
 								strokeWidth={curve.strokeWidth || 2}
 								fill="none"
 								strokeLinecap="round"
@@ -107,9 +107,10 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 											strokeDasharray: `${pathLength}`,
 											strokeDashoffset: `${pathLength}`,
 											animationPlayState: animationState === 'paused' ? 'paused' : 'running',
+											filter: 'drop-shadow(0 0 5px var(--primary))'
 										}
 										: animationState === 'stopped'
-											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1 }
+											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1, filter: 'drop-shadow(0 0 5px var(--primary))' }
 											: {}
 								}
 							/>
@@ -125,7 +126,7 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 								y1={curve.start.y}
 								x2={curve.end.x}
 								y2={curve.end.y}
-								stroke={curve.color || 'white'}
+								stroke={curve.color || 'var(--primary)'}
 								strokeWidth={curve.strokeWidth || 2}
 								strokeLinecap="round"
 								className={animate ? 'kolam-line-animated' : 'kolam-line'}
@@ -137,9 +138,10 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 											strokeDasharray: `${lineLength}`,
 											strokeDashoffset: `${lineLength}`,
 											animationPlayState: animationState === 'paused' ? 'paused' : 'running',
+											filter: 'drop-shadow(0 0 5px var(--primary))'
 										}
 										: animationState === 'stopped'
-											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1 }
+											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1, filter: 'drop-shadow(0 0 5px var(--primary))' }
 											: { opacity: 0 }
 								}
 							/>
@@ -175,17 +177,18 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
         }
 
         .kolam-svg {
-          filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.1));
         }
         
         .kolam-path,
         .kolam-line {
-          transition: stroke-width 0.2s ease;
+          transition: all 0.2s ease;
         }
         
         .kolam-path:hover,
         .kolam-line:hover {
-          stroke-width: 3;
+          stroke-width: 4;
+          filter: drop-shadow(0 0 10px var(--primary));
         }
       `}</style>
 		</div>
