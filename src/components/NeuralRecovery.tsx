@@ -104,11 +104,11 @@ export const NeuralRecovery: React.FC = () => {
 	}
 
 	return (
-		<div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 px-4 pb-8 pt-8 sm:px-6 sm:pb-10 lg:gap-10 lg:px-8">
+		<div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-4 pb-8 pt-4 sm:px-6 sm:pt-6">
 			{/* Title - only show when playing */}
 			{status === 'playing' && (
-				<div className="flex max-w-3xl flex-col items-center gap-2 text-center">
-					<p className="font-elegant text-xs uppercase tracking-[0.3em] text-[var(--gold)]">
+				<div className="flex flex-col items-center gap-1 text-center">
+					<p className="font-elegant text-[10px] uppercase tracking-[0.25em] text-[var(--gold)]">
 						Restoring Pattern • {status.toUpperCase()}
 					</p>
 				</div>
@@ -150,7 +150,7 @@ export const NeuralRecovery: React.FC = () => {
 					</div>
 				</div>
 			) : (
-				<div className="grid w-full gap-6 xl:grid-cols-[minmax(260px,320px)_minmax(0,1fr)_minmax(260px,320px)] xl:items-start">
+				<div className="flex w-full flex-col gap-6 xl:grid xl:grid-cols-[minmax(260px,320px)_minmax(0,1fr)_minmax(260px,320px)] xl:items-start">
 					<div className="order-2 w-full xl:order-1">
 						<div className="border border-white/10 bg-white/5 p-4 sm:p-5 xl:sticky xl:top-28">
 							<div className="mb-4 text-center font-mono text-[10px] uppercase tracking-[0.4em] opacity-40">
@@ -186,8 +186,8 @@ export const NeuralRecovery: React.FC = () => {
 						</div>
 					</div>
 
-					<div className="order-1 flex min-w-0 flex-col items-center gap-4 xl:order-2">
-						<div className="relative flex min-h-[360px] w-full items-center justify-center overflow-hidden border border-white/10 bg-black/30 p-3 sm:min-h-[520px] sm:p-6">
+					<div className="order-1 flex w-full min-w-0 flex-col items-center gap-4 xl:order-2">
+						<div className="relative flex min-h-[280px] w-full items-center justify-center overflow-hidden border border-white/10 bg-black/30 p-2 sm:min-h-[400px] sm:p-4 lg:min-h-[520px] lg:p-6">
 							{pattern ? (
 								<KolamDisplay
 									pattern={pattern}
@@ -197,7 +197,7 @@ export const NeuralRecovery: React.FC = () => {
 									className={`max-w-full ${isSolved ? 'animate-pulse' : ''}`}
 								/>
 							) : (
-								<div className="headline flex h-96 w-96 items-center justify-center border border-white/10 opacity-20 animate-pulse">
+								<div className="headline flex h-48 w-full max-w-sm items-center justify-center border border-white/10 opacity-20 animate-pulse sm:h-72">
 									Loading Grid...
 								</div>
 							)}

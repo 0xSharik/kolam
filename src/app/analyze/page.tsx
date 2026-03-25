@@ -3,16 +3,17 @@ import { ImageAnalyzer } from '@/components/ImageAnalyzer';
 
 export default function AnalyzePage() {
 	return (
-		<main className="min-h-screen bg-[var(--background)]">
+		<div className="flex min-h-screen flex-col bg-[#0a0a0a]">
 			<Header
 				title="Pattern Analysis"
-				subtitle="Upload & Inspect Visual Data"
-				showBackButton={true}
+				subtitle="Sacred Geometry · Image Recognition"
+				showBackButton
 				backButtonHref="/"
-				backButtonText="Back to Studio"
-				className="bg-transparent"
+				backButtonText="Return to Studio"
 			/>
-			<ImageAnalyzer />
-		</main>
+			<main className="flex-1">
+				<ImageAnalyzer />
+			</main>
+		</div>
 	);
 }

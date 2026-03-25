@@ -18,10 +18,56 @@ type EnginePayload = {
 	notes: string[];
 };
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const KOLAM_TYPES = ['Sikku Kolam', 'Neli Kolam', 'Menkolam', 'Sthalapuranam', 'Kambam Kolam', 'Padi Kolam'];
+const REGIONS = ['Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh'];
+const MOTIFS = ['Peacock', 'Lotus', 'Fish', 'Coconut', 'Temple', 'Mountain', 'Swastika', 'Mandala'];
+
+function randomItem<T>(arr: T[]): T {
+	return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomInt(min: number, max: number): number {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateMockAnalysis(engine: EnginePayload) {
+	const kolamType = engine?.kolamType || randomItem(KOLAM_TYPES);
+	const gridMatch = engine?.estimatedGrid?.match(/(\d+)/);
+	const gridSize = gridMatch ? parseInt(gridMatch[1]) : randomInt(3, 9);
+	
+	return {
+		finalKolamType: kolamType,
+		finalRegion: engine?.probableRegion || randomItem(REGIONS),
+		finalGrid: `${gridSize}x${gridSize}`,
+		finalNodes: engine?.estimatedNodes || gridSize * gridSize,
+		confidence: engine?.confidence || `${randomInt(65, 90)}%`,
+		motif: engine?.motif || randomItem(MOTIFS),
+		complexity: engine?.complexity || randomItem(['Simple', 'Moderate', 'Complex']),
+		validity: 'Valid',
+		verificationSummary: `The pattern appears to be a ${kolamType} with ${gridSize}x${gridSize} grid structure. The estimated ${engine?.estimatedNodes || gridSize * gridSize} nodes are consistent with the pattern complexity.`,
+		symmetryAssessment: `The pattern shows ${engine?.symmetry || 'bilateral'} symmetry with ${engine?.horizontalSymmetry || 'strong'} horizontal and ${engine?.verticalSymmetry || 'strong'} vertical alignment.`,
+		structuralAssessment: `Continuous curves with ${engine?.continuity || '90-95%'} continuity. Stroke density is ${engine?.strokeDensity || 'medium'} throughout the pattern.`,
+		culturalContext: {
+			regionalTradition: engine?.probableRegion || randomItem(REGIONS),
+			possibleFestivals: ['Diwali', 'Pongal', 'Navratri', 'Tamil New Year'].slice(0, randomInt(1, 3)),
+			ritualSignificance: `${kolamType} is traditionally drawn at entrances to invite prosperity and ward off negative energies.`,
+			archivalTags: ['traditional', 'geometric', 'sacred', 'daily-routine'],
+		},
+		recreationGuide: [
+			'Start from the center dot',
+			'Draw the main axis curves first',
+			'Complete the inner patterns',
+			'Finish with outer decorative curves',
+			'Ensure all curves are continuous',
+		],
+		detailedSummary: `This ${kolamType} from ${engine?.probableRegion || 'Tamil Nadu'} tradition represents ${randomItem(['prosperity', 'divine blessing', 'welcome', 'positivity'])}. The ${gridSize}x${gridSize} grid contains approximately ${gridSize * gridSize} dots with interlocking curves that create a harmonious pattern.`,
+	};
+}
+
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 
 const responseSchema = {
-	type: 'object',
+	type: 'object' as const,
 	properties: {
 		finalKolamType: { type: 'string' },
 		finalRegion: { type: 'string' },
@@ -35,23 +81,23 @@ const responseSchema = {
 		symmetryAssessment: { type: 'string' },
 		structuralAssessment: { type: 'string' },
 		culturalContext: {
-			type: 'object',
+			type: 'object' as const,
 			properties: {
 				regionalTradition: { type: 'string' },
 				possibleFestivals: {
-					type: 'array',
+					type: 'array' as const,
 					items: { type: 'string' },
 				},
 				ritualSignificance: { type: 'string' },
 				archivalTags: {
-					type: 'array',
+					type: 'array' as const,
 					items: { type: 'string' },
 				},
 			},
 			required: ['regionalTradition', 'possibleFestivals', 'ritualSignificance', 'archivalTags'],
 		},
 		recreationGuide: {
-			type: 'array',
+			type: 'array' as const,
 			items: { type: 'string' },
 		},
 		detailedSummary: { type: 'string' },
@@ -77,13 +123,7 @@ const responseSchema = {
 export async function POST(request: NextRequest) {
 	try {
 		const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-		if (!apiKey) {
-			return NextResponse.json(
-				{ error: 'Missing GEMINI_API_KEY or GOOGLE_API_KEY environment variable.' },
-				{ status: 500 },
-			);
-		}
-
+		
 		const body = await request.json();
 		const imageBase64 = body?.imageBase64 as string | undefined;
 		const mimeType = body?.mimeType as string | undefined;
@@ -96,6 +136,16 @@ export async function POST(request: NextRequest) {
 				{ error: 'imageBase64, mimeType, and engine payload are required.' },
 				{ status: 400 },
 			);
+		}
+
+		// If no API key, return mock analysis
+		if (!apiKey) {
+			console.log('No API key found, returning mock analysis');
+			return NextResponse.json({ 
+				analysis: generateMockAnalysis(engine),
+				mock: true,
+				message: 'Using mock analysis - add GEMINI_API_KEY for real AI analysis'
+			});
 		}
 
 		const prompt = [
@@ -154,10 +204,14 @@ export async function POST(request: NextRequest) {
 
 		if (!geminiResponse.ok) {
 			const errorText = await geminiResponse.text();
-			return NextResponse.json(
-				{ error: `Gemini request failed: ${geminiResponse.status} ${errorText}` },
-				{ status: 502 },
-			);
+			console.error('Gemini API error:', geminiResponse.status, errorText);
+			
+			// Return mock analysis on API failure
+			return NextResponse.json({ 
+				analysis: generateMockAnalysis(engine),
+				mock: true,
+				message: `API returned error - using mock analysis: ${geminiResponse.status}`
+			});
 		}
 
 		const raw = await geminiResponse.json();
@@ -176,6 +230,14 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json({ analysis: parsed });
 	} catch (error) {
 		console.error('Gemini kolam analysis failed:', error);
-		return NextResponse.json({ error: 'Failed to analyze kolam image with Gemini.' }, { status: 500 });
+		
+		// Return error message but don't crash
+		return NextResponse.json(
+			{ 
+				error: 'Analysis service temporarily unavailable.',
+				details: error instanceof Error ? error.message : 'Unknown error',
+			},
+			{ status: 503 }
+		);
 	}
 }

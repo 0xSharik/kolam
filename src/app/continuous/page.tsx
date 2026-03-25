@@ -1,10 +1,10 @@
 'use client';
 
 import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
 import { KolamDisplay } from '@/components/KolamDisplay';
 import { KolamPattern } from '@/types/kolam';
 import { KolamGenerator } from '@/utils/kolamGenerator';
+import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function ContinuousPage() {
@@ -85,15 +85,33 @@ export default function ContinuousPage() {
 
 	return (
 		<div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-			<Header 
-				title="Continuous Flow" 
-				subtitle="Seamless Pattern Animation" 
-				showBackButton={true}
-				backButtonHref="/"
-				backButtonText="Back to Studio"
-			/>
+			{/* Top Navigation - matching homepage style */}
+			<header className="heritage-border-top sticky top-0 z-50 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--surface)]/95 px-4 py-3 backdrop-blur-md sm:px-6 sm:py-4">
+				<Link href="/" className="flex items-center gap-3">
+					<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--gold)]/30 bg-[var(--surface-elevated)] sm:h-10 sm:w-10">
+						<svg viewBox="0 0 24 24" className="h-4 w-4 text-[var(--gold)] sm:h-5 sm:w-5">
+							<circle cx="12" cy="12" r="3" fill="currentColor" />
+							<circle cx="12" cy="5" r="1.5" fill="currentColor" opacity="0.6" />
+							<circle cx="12" cy="19" r="1.5" fill="currentColor" opacity="0.6" />
+							<circle cx="5" cy="12" r="1.5" fill="currentColor" opacity="0.6" />
+							<circle cx="19" cy="12" r="1.5" fill="currentColor" opacity="0.6" />
+						</svg>
+					</div>
+					<div>
+						<span className="font-heritage text-lg text-[var(--ivory)]">Kolam</span>
+						<span className="ml-2 hidden font-elegant text-xs text-[var(--muted)] sm:inline">/ Continuous Flow</span>
+					</div>
+				</Link>
+				<Link href="/" className="flex items-center gap-2 rounded border border-[var(--gold)]/20 bg-[var(--gold)]/5 px-4 py-2 font-elegant text-sm text-[var(--gold)] transition-all hover:bg-[var(--gold)]/10">
+					<svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+					</svg>
+					<span className="hidden sm:inline">Back to Studio</span>
+					<span className="sm:hidden">Back</span>
+				</Link>
+			</header>
 			
-			<div className="mx-auto max-w-6xl p-6 lg:p-8">
+			<div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
 				{/* Kolam Display Area */}
 				<div className="relative mb-8">
 					<div className="heritage-card rounded-lg overflow-hidden">
@@ -103,7 +121,7 @@ export default function ContinuousPage() {
 						<div className="pointer-events-none absolute bottom-4 left-4 h-10 w-10 border-b border-l border-[var(--gold)]/20"></div>
 						<div className="pointer-events-none absolute bottom-4 right-4 h-10 w-10 border-b border-r border-[var(--gold)]/20"></div>
 						
-						<div className="flex min-h-[400px] items-center justify-center bg-[var(--obsidian)] p-8 lg:p-12">
+						<div className="flex min-h-[300px] items-center justify-center bg-[var(--obsidian)] p-4 sm:min-h-[400px] sm:p-8 lg:p-12">
 							{currentPattern ? (
 								<>
 									<KolamDisplay
@@ -115,17 +133,17 @@ export default function ContinuousPage() {
 									/>
 									
 									{/* Status indicators */}
-									<div className="absolute top-4 left-4 rounded border bg-[var(--surface)]/80 px-4 py-2 backdrop-blur-sm">
+									<div className="absolute top-4 left-4 rounded border bg-[var(--surface)]/80 px-3 py-1.5 backdrop-blur-sm sm:px-4 sm:py-2">
 										<div className="flex items-center gap-2">
 											<span className={`h-2 w-2 rounded-full ${isPlaying ? 'bg-[var(--gold)] animate-pulse' : 'bg-[var(--muted)]'}`}></span>
-											<span className="font-elegant text-sm text-[var(--ivory)]">
+											<span className="font-elegant text-xs text-[var(--ivory)] sm:text-sm">
 												{isPlaying ? 'Playing' : 'Paused'}
 											</span>
 										</div>
 									</div>
 
-									<div className="absolute top-4 right-4 rounded border border-[var(--border-subtle)] bg-[var(--surface)]/80 px-4 py-2 backdrop-blur-sm">
-										<span className="font-elegant text-sm text-[var(--muted)]">
+									<div className="absolute top-4 right-4 hidden rounded border border-[var(--border-subtle)] bg-[var(--surface)]/80 px-3 py-1.5 backdrop-blur-sm sm:block sm:px-4 sm:py-2">
+										<span className="font-elegant text-xs text-[var(--muted)] sm:text-sm">
 											{currentPattern.dots.length} dots • {currentPattern.curves.length} curves
 										</span>
 									</div>
@@ -141,8 +159,8 @@ export default function ContinuousPage() {
 				</div>
 
 				{/* Controls */}
-				<div className="heritage-card rounded-lg p-6">
-					<div className="grid gap-6 md:grid-cols-2 lg:gap-8 mb-8">
+				<div className="heritage-card rounded-lg p-4 sm:p-6">
+					<div className="grid gap-6 sm:grid-cols-2 lg:gap-8 mb-6 sm:mb-8">
 						{/* Animation Speed */}
 						<div>
 							<label className="mb-3 block font-elegant text-sm text-[var(--muted)]">
@@ -186,10 +204,10 @@ export default function ContinuousPage() {
 					</div>
 
 					{/* Action Buttons */}
-					<div className="flex flex-wrap justify-center gap-4">
+					<div className="flex flex-wrap justify-center gap-3 sm:gap-4">
 						<button
 							onClick={togglePlayback}
-							className={`rounded border px-8 py-3 font-heritage text-base tracking-wide transition-all ${
+							className={`rounded border px-6 py-3 font-heritage text-base tracking-wide transition-all sm:px-8 ${
 								isPlaying 
 									? 'border-[var(--temple-red)]/50 bg-[var(--temple-red)]/20 text-[var(--temple-red)]' 
 									: 'border-[var(--gold)]/40 bg-[var(--gold)]/10 text-[var(--gold)] hover:bg-[var(--gold)]/20'

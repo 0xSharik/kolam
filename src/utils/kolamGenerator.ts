@@ -367,14 +367,14 @@ export class KolamGenerator {
 	/**
 	 * Main entry point - generate kolam pattern using algorithm
 	 */
-	static generateKolam1D(size: number): KolamPattern {
+	static generateKolam1D(size: number, palette?: string[]): KolamPattern {
 		console.log(`🎨 Generating 1D Kolam of size ${size}`);
 
 		const matrix = this.proposeKolam1D(size);
 		console.log(`📊 Generated matrix: ${matrix.length}x${matrix[0].length}`);
 
 		// Convert to visual kolam pattern using draw_kolam logic (with flip)
-		const pattern = this.drawKolam(matrix, true);
+		const pattern = this.drawKolam(matrix, true, palette);
 		console.log(`✅ Created kolam with ${pattern.dots.length} dots and ${pattern.curves.length} curves`);
 
 		return pattern;
@@ -383,7 +383,7 @@ export class KolamGenerator {
 	/**
 	 * Optimized drawKolam with optional flipping
 	 */
-	static drawKolam(M: number[][], flip: boolean = true): KolamPattern {
+	static drawKolam(M: number[][], flip: boolean = true, palette?: string[]): KolamPattern {
 		const m = M.length;
 		const n = M[0].length;
 
@@ -398,12 +398,38 @@ export class KolamGenerator {
 			}
 		}
 
+		// Color palette: use provided palette or default vibrant set
+		const PALETTE = palette && palette.length > 0 ? palette : [
+			'#FF3B30', '#FF9500', '#FFCC00', '#34C759', '#007AFF',
+			'#AF52DE', '#FF2D55', '#5AC8FA', '#FF6B35', '#32D74B',
+		];
+
+		// Map each cell to its canonical symmetry position (top-left quadrant)
+		// so mirrored cells share the same color
+		const getSymmetryColor = (row: number, col: number, rows: number, cols: number): string => {
+			const canonRow = Math.min(row, rows - 1 - row);
+			const canonCol = Math.min(col, cols - 1 - col);
+			// Create a unique index from canonical position
+			const halfCols = Math.ceil(cols / 2);
+			const idx = canonRow * halfCols + canonCol;
+			return PALETTE[idx % PALETTE.length];
+		};
+
+		const getDotColor = (row: number, col: number, rows: number, cols: number): string => {
+			// Dots use a subtle warm white tinted by their symmetry group
+			const curveColor = getSymmetryColor(row, col, rows, cols);
+			// Return a softer version — just use warm white for dots so the curves pop
+			return curveColor + '80'; // 50% opacity hex suffix
+		};
+
 		const dots: Dot[] = [];
 		const curves: Line[] = [];
 
 		for (let i = 0; i < m; i++) {
 			for (let j = 0; j < n; j++) {
 				if (processedM[i][j] > 0) {
+					const cellColor = getSymmetryColor(i, j, m, n);
+
 					dots.push({
 						id: `dot-${i}-${j}`,
 						center: {
@@ -411,7 +437,7 @@ export class KolamGenerator {
 							y: (i + 1) * this.CELL_SPACING
 						},
 						radius: 3,
-						color: '#ffffff',
+						color: getDotColor(i, j, m, n),
 						filled: true
 					});
 
@@ -434,7 +460,7 @@ export class KolamGenerator {
 							end: curvePoints[curvePoints.length - 1],
 							curvePoints: curvePoints,
 							strokeWidth: 1.5,
-							color: '#ffffff'
+							color: cellColor
 						});
 					}
 				}

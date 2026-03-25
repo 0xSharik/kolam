@@ -25,10 +25,8 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 }) => {
 	const { dimensions, dots, curves } = pattern;
 
-	// Calculate path length for accurate stroke animation
 	const calculatePathLength = (curvePoints?: CurvePoint[]): number => {
 		if (!curvePoints || curvePoints.length < 2) return 100;
-
 		let length = 0;
 		for (let i = 1; i < curvePoints.length; i++) {
 			const dx = curvePoints[i].x - curvePoints[i - 1].x;
@@ -38,27 +36,17 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 		return Math.max(length, 50);
 	};
 
-	// Calculate line length for simple lines
-	const calculateLineLength = (x1: number, y1: number, x2: number, y2: number): number => {
-		const dx = x2 - x1;
-		const dy = y2 - y1;
-		return Math.sqrt(dx * dx + dy * dy);
-	};
-
 	return (
-		<div className={`kolam-container ${className}`}>
+		<div className={`kolam-container w-full flex justify-center ${className}`}>
 			<svg
-				width={dimensions.width}
-				height={dimensions.height}
 				viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
-				className="kolam-svg"
+				className="kolam-svg w-full h-auto"
 				style={{
-					maxWidth: '100%',
-					height: 'auto',
+					maxWidth: Math.min(dimensions.width, 900),
 					'--animation-duration': `${animationTiming}ms`
 				} as React.CSSProperties}
 			>
-				{/* Render interactive cell overlays if in game mode */}
+				{/* Interactive cell overlays for game mode */}
 				{interactive && pattern.grid.cells.map((row, i) => 
 					row.map((cell, j) => {
 						const status = cellStatus[`${i}-${j}`] || 'normal';
@@ -81,7 +69,6 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 
 				{/* Render dots */}
 				{dots.map((dot, index) => {
-					// Detect which cell this dot belongs to for styling
 					const cellX = Math.round(dot.center.x / 60) - 1;
 					const cellY = Math.round(dot.center.y / 60) - 1;
 					const status = cellStatus[`${cellY}-${cellX}`] || 'normal';
@@ -112,15 +99,15 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 					);
 				})}
 
-				{/* Render curves using SVG paths with stroke animation */}
+				{/* Render curves with per-curve colors */}
 				{curves.map((curve, index) => {
-					// Detect which cell this curve belongs to (using start point approximation)
 					const cellX = Math.round(curve.start.x / 60) - 1;
 					const cellY = Math.round(curve.start.y / 60) - 1;
 					const status = cellStatus[`${cellY}-${cellX}`] || 'normal';
 
-					const lineAnimTime = (animationTiming / curves.length) * 3 
+					const lineAnimTime = (animationTiming / curves.length) * 3;
 					const curveDelay = lineAnimTime * index / 3;
+					const curveColor = curve.color || 'var(--primary)';
 
 					if (curve.curvePoints && curve.curvePoints.length > 1) {
 						const pathLength = calculatePathLength(curve.curvePoints);
@@ -129,7 +116,7 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 							<path
 								key={curve.id}
 								d={generateSVGPath(curve.curvePoints)}
-								stroke={status === 'corrupted' ? 'rgba(255,0,0,0.3)' : (curve.color || 'var(--primary)')}
+								stroke={status === 'corrupted' ? 'rgba(255,0,0,0.3)' : curveColor}
 								strokeWidth={curve.strokeWidth || 2}
 								fill="none"
 								strokeLinecap="round"
@@ -143,59 +130,45 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 											strokeDasharray: `${pathLength}`,
 											strokeDashoffset: `${pathLength}`,
 											animationPlayState: animationState === 'paused' ? 'paused' : 'running',
-											filter: status === 'corrupted' ? 'none' : 'drop-shadow(0 0 5px var(--primary))',
+											filter: status === 'corrupted' ? 'none' : `drop-shadow(0 0 4px ${curveColor})`,
 											opacity: status === 'corrupted' ? 0.3 : 1
 										}
 										: animationState === 'stopped'
-											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1, filter: 'drop-shadow(0 0 5px var(--primary))' }
+											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1, filter: `drop-shadow(0 0 4px ${curveColor})` }
 											: {}
 								}
 							/>
 						);
 					}
-					return null; // Simplified for brevity in replace
+					return null;
 				})}
 			</svg>
 
-			{/* CSS for animations */}
 			<style jsx>{`
         .kolam-dot-animated {
           animation: fadeIn ease-in-out forwards;
         }
-
         .kolam-line-animated,
         .kolam-path-animated {
           animation: drawPath ease-in-out forwards;
         }
-
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-
         @keyframes drawPath {
-          to {
-            stroke-dashoffset: 0;
-          }
+          to { stroke-dashoffset: 0; }
         }
-
         .kolam-svg {
-          filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.1));
+          filter: drop-shadow(0 0 15px rgba(201, 162, 39, 0.08));
         }
-        
         .kolam-path,
         .kolam-line {
           transition: all 0.2s ease;
         }
-        
         .kolam-path:hover,
         .kolam-line:hover {
           stroke-width: 4;
-          filter: drop-shadow(0 0 10px var(--primary));
         }
       `}</style>
 		</div>

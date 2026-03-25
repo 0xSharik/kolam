@@ -1,64 +1,127 @@
-# HEADACHE // DIGITAL KOLAM INSTALLATION
+# Kolam — Sacred Geometry Engine
 
-> **STATUS**: V1.0.4-STABLE // CORE: 0xFD44 // BUS: ACTIVE
-
-A high-fidelity **Subliminal Neon Glitch-Art** experience. **HEADACHE** breathes digital life into the ancient South Indian tradition of Kolam, transforming mathematical symmetry into a pulsing, reactive installation.
-
-![HEADACHE BRAND ICON](file:///C:/Users/Acer/.gemini/antigravity/brain/73d7df59-3b39-4fd4-b246-f1938a23ac0d/headache_favicon_1774364910609.png)
+> A digital heritage experience exploring the ancient South Indian art of **Kolam** through generative sacred geometry.
 
 ---
 
-## ⚡ THE USP
+## ✨ Features
 
-### 1. Mathematical Integrity
-Unlike typical "Generative AI" that hallucinates patterns, **HEADACHE** uses a **Deterministic Tiling Engine**. Every line is 100% geometrically valid, obeying strict 16-tile connectivity rules. No dead-ends. No fuzzy artifacts. Just pure, clean geometry.
+### 🎨 Heritage-Themed Design
+- **Warm earth-tone palette** — Deep obsidian, temple gold, saffron, and ivory
+- **Premium typography** — Playfair Display (headings) + Crimson Pro (body) for an elegant serif aesthetic
+- **Animated Kolam loader** — Spinning dot-ring animation inspired by traditional Kolam dot grids
+- **Decorative heritage borders** — Gold gradient lines and corner ornaments throughout the UI
 
-### 2. Subliminal Glitch Aesthetic
-A curated visual experience built on the **Obsidian/Magenta/Cyan** palette. Features CRT-style scanline overlays, fractal noise textures, and sharp `0px` border-radius geometry for a premium industrial feel.
+### 🔷 Generative Kolam Engine
+- **Deterministic Tiling Algorithm** — 16-tile curve DNA with strict adjacency rules, no randomness artifacts
+- **Pattern sizes 3×3 to 15×15** — Scalable sacred geometry up to 225 cells
+- **SVG stroke animations** — Smooth drawing animations that trace each Kolam curve
+- **Export to SVG/PNG** — Download patterns for print or digital use
 
-### 3. Reactive Installation
-Not a static generator. The interface tracks user presence via mouse-movement reactive gradients and allows for infinite "Computation" of patterns ranging from 3x3 to 15x15 neural grids.
+### 🎮 Neural Recovery Game (`/game`)
+- **Pattern reconstruction puzzle** — Identify and fix corrupted cells in a Kolam grid
+- **16-tile DNA Toolbox** — Select the correct curve primitive to restore geometric integrity
+- **Progressive difficulty** — 3×3, 5×5, and 7×7 grid sizes
+- **Live validation** — Real-time feedback showing corrupted, selected, and fixed cell states
+
+### 🔍 Image Analyzer (`/analyze`)
+- **Upload Kolam images** for pattern analysis
+- API-powered geometric feature extraction
+
+### 🔄 Continuous Mode (`/continuous`)
+- Endless pattern generation mode
 
 ---
 
-## 🛠 TECH STACK
+## 🛠 Tech Stack
 
-- **Core**: Next.js 15 (App Router) + React 19
-- **Logic**: TypeScript (Deterministic Tiling Algorithm)
-- **Styling**: Tailwind CSS 4 (Custom Glitch Utility Layer)
-- **Graphics**: Scalable Vector Graphics (SVG) with CSS `stroke-dash` animations
-- **API**: Server-side SVG generation for on-demand pattern embedding
+| Layer       | Technology                                         |
+|-------------|-----------------------------------------------------|
+| Framework   | Next.js 15 (App Router) + React 19                 |
+| Language    | TypeScript                                          |
+| Styling     | Tailwind CSS 4 + Custom Heritage CSS                |
+| Typography  | Playfair Display, Crimson Pro, Space Grotesk        |
+| Graphics    | SVG with CSS `stroke-dash` animations               |
+| API         | Next.js API Routes (pattern analysis)               |
 
 ---
 
-## 🚀 GETTING STARTED
+## 🚀 Getting Started
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/0xSharik/kolam.git
 cd headache
 
 # Install dependencies
 pnpm install
 
-# Port:3000 // Initiate Pulse
+# Start dev server (port 3000)
 pnpm dev
 ```
 
 ---
 
-## ⚙️ THE GEOMETRIC ENGINE
+## 📂 Project Structure
 
-The "Neural Generator" is based on **Tiling Theory**:
-- **16-Tile DNA**: Every pattern is composed of 16 fundamental curve primitives.
-- **Mate System**: Adjacency tables (`mate_pt_dn`, `mate_pt_rt`) ensure line continuity.
-- **Symmetry Inversion**: Horizontal and Vertical matrices (`h_inv`, `v_inv`) unfold seed quadrants into full symmetrical masterpieces.
+```
+src/
+├── app/
+│   ├── page.tsx              # Homepage — Kolam Generator Studio
+│   ├── game/page.tsx         # Neural Recovery Game
+│   ├── analyze/page.tsx      # Image Analyzer
+│   ├── continuous/page.tsx   # Continuous Generation Mode
+│   ├── api/analyze-kolam/    # Pattern analysis API
+│   ├── layout.tsx            # Root layout (fonts, metadata)
+│   └── globals.css           # Heritage design system
+├── components/
+│   ├── KolamEditor.tsx       # Main studio interface
+│   ├── KolamDisplay.tsx      # SVG pattern renderer
+│   ├── NeuralRecovery.tsx    # Game mode component
+│   ├── HeritageLoader.tsx    # Animated Kolam-dot loader
+│   ├── ImageAnalyzer.tsx     # Upload + analysis UI
+│   ├── Header.tsx            # Heritage-themed header
+│   └── Footer.tsx            # Footer component
+├── utils/
+│   ├── kolamGenerator.ts     # Deterministic tiling engine
+│   ├── kolamExporter.ts      # SVG/PNG export
+│   ├── svgPathGenerator.ts   # Curve-to-path conversion
+│   └── urlParams.ts          # URL state management
+├── data/
+│   └── kolamPatterns.ts      # 16-tile curve definitions
+└── types/
+    └── kolam.ts              # TypeScript interfaces
+```
 
 ---
 
-## 📜 LICENSE & TRADITION
+## ⚙️ The Geometric Engine
 
-This project is a digital tribute to the South Indian art of Kolam. 
+The generator uses **Tiling Theory** principles:
 
-© 2026 **HEADACHE INSTALLATION LABS**  
-LAT: 51.5074° N // LON: 0.1278° W
+- **16-Tile DNA** — Every pattern is composed of 16 fundamental curve primitives
+- **Mate System** — Adjacency tables (`mate_pt_dn`, `mate_pt_rt`) ensure line continuity across cell boundaries
+- **Symmetry Inversion** — Horizontal/vertical matrices (`h_inv`, `v_inv`) unfold seed quadrants into full symmetrical patterns
+
+---
+
+## 🎨 Design System
+
+The heritage theme uses a curated warm palette:
+
+| Token           | Value       | Usage                    |
+|-----------------|-------------|--------------------------|
+| `--background`  | `#0D0906`   | Deep obsidian base       |
+| `--ivory`       | `#F5EFE6`   | Primary text             |
+| `--gold`        | `#C9A227`   | Accent, borders, labels  |
+| `--saffron`     | `#E07020`   | Secondary accent         |
+| `--temple-red`  | `#8B1A1A`   | Alerts, game CTA         |
+| `--surface`     | `#151210`   | Card backgrounds         |
+
+---
+
+## 📜 License & Heritage
+
+This project is a digital tribute to the South Indian art of Kolam — sacred geometric patterns drawn at the threshold of homes at dawn.
+
+© 2026 Kolam Heritage Project
