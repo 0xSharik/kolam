@@ -84,117 +84,127 @@ export default function ContinuousPage() {
 	}, []);
 
 	return (
-		<div className="kolam-editor bg-amber-100 text-amber-900 min-h-screen">
+		<div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
 			<Header 
-				title="Zen Kolam" 
-				subtitle="Continuous Animation" 
-				showBackButton={true} 
+				title="Continuous Flow" 
+				subtitle="Seamless Pattern Animation" 
+				showBackButton={true}
+				backButtonHref="/"
+				backButtonText="Back to Studio"
 			/>
-			<div className="max-w-6xl mx-auto p-8">
-				<div className="kolam-display-area">
-					{currentPattern ? (
-						<div className="kolam-container relative flex justify-center items-center bg-amber-900 border-4 border-white p-8 rounded-2xl shadow-lg">
-							<KolamDisplay
-								pattern={currentPattern}
-								animate={isAnimating}
-								animationState={isAnimating ? 'playing' : 'stopped'}
-								animationTiming={Math.floor(animationSpeed * 0.8)}
-								className="kolam-main"
-							/>
-
-							<div className="absolute top-4 left-4">
-								<div className={`px-3 py-2 rounded-lg text-sm font-medium backdrop-blur-sm border-2 ${isPlaying
-									? 'bg-green-600/90 text-green-100 border-green-400/50'
-									: 'bg-amber-700/50 text-amber-100 border-amber-500/50'
-									}`}>
-									<div className="flex items-center gap-2">
-										<div className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-green-400 animate-pulse' : 'bg-amber-300'
-											}`} />
-										{isPlaying ? 'Playing' : 'Paused'}
+			
+			<div className="mx-auto max-w-6xl p-6 lg:p-8">
+				{/* Kolam Display Area */}
+				<div className="relative mb-8">
+					<div className="heritage-card rounded-lg overflow-hidden">
+						{/* Corner ornaments */}
+						<div className="pointer-events-none absolute left-4 top-4 h-10 w-10 border-l border-t border-[var(--gold)]/20"></div>
+						<div className="pointer-events-none absolute right-4 top-4 h-10 w-10 border-r border-t border-[var(--gold)]/20"></div>
+						<div className="pointer-events-none absolute bottom-4 left-4 h-10 w-10 border-b border-l border-[var(--gold)]/20"></div>
+						<div className="pointer-events-none absolute bottom-4 right-4 h-10 w-10 border-b border-r border-[var(--gold)]/20"></div>
+						
+						<div className="flex min-h-[400px] items-center justify-center bg-[var(--obsidian)] p-8 lg:p-12">
+							{currentPattern ? (
+								<>
+									<KolamDisplay
+										pattern={currentPattern}
+										animate={isAnimating}
+										animationState={isAnimating ? 'playing' : 'stopped'}
+										animationTiming={Math.floor(animationSpeed * 0.8)}
+										className="drop-shadow-[0_0_40px_rgba(201,162,39,0.15)]"
+									/>
+									
+									{/* Status indicators */}
+									<div className="absolute top-4 left-4 rounded border bg-[var(--surface)]/80 px-4 py-2 backdrop-blur-sm">
+										<div className="flex items-center gap-2">
+											<span className={`h-2 w-2 rounded-full ${isPlaying ? 'bg-[var(--gold)] animate-pulse' : 'bg-[var(--muted)]'}`}></span>
+											<span className="font-elegant text-sm text-[var(--ivory)]">
+												{isPlaying ? 'Playing' : 'Paused'}
+											</span>
+										</div>
 									</div>
-								</div>
-							</div>
 
-							<div className="absolute top-4 right-4">
-								<div className="bg-amber-900/90 border-2 border-white rounded-lg px-3 py-2 text-amber-100 text-sm backdrop-blur-sm">
-									{currentPattern.dots.length} dots • {currentPattern.curves.length} curves
-									{isAnimating && <span className="text-green-400 ml-2">• Animating</span>}
+									<div className="absolute top-4 right-4 rounded border border-[var(--border-subtle)] bg-[var(--surface)]/80 px-4 py-2 backdrop-blur-sm">
+										<span className="font-elegant text-sm text-[var(--muted)]">
+											{currentPattern.dots.length} dots • {currentPattern.curves.length} curves
+										</span>
+									</div>
+								</>
+							) : (
+								<div className="flex flex-col items-center text-[var(--muted)]">
+									<div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--gold)] border-t-transparent mb-4"></div>
+									<span className="font-elegant">Generating pattern...</span>
 								</div>
-							</div>
+							)}
 						</div>
-					) : (
-						<div className="kolam-container flex justify-center items-center bg-amber-900 border-4 border-white p-8 rounded-2xl shadow-lg h-96">
-							<div className="text-amber-100 text-lg">
-								<div className="w-8 h-8 border-2 border-amber-100 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-								Generating pattern...
-							</div>
-						</div>
-					)}
+					</div>
 				</div>
 
-				<div className="controls-area">
-					<div className="controls-container bg-amber-900 border-4 border-white p-6 rounded-2xl shadow-lg">
-						<div className="parameters-grid grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-							<div className="parameter-group">
-								<label className="block text-sm font-medium text-amber-100 mb-2">
-									Animation Speed (seconds per pattern)
-								</label>
-								<div className="flex items-center gap-3">
-									<input
-										type="range"
-										min="1"
-										max="10"
-										step="0.5"
-										value={animationSpeed / 1000}
-										onChange={(e) => setAnimationSpeed(parseFloat(e.target.value) * 1000)}
-										disabled={isPlaying}
-										className="flex-1 disabled:opacity-50"
-									/>
-									<span className="text-amber-100 text-sm w-12">
-										{(animationSpeed / 1000).toFixed(1)}s
-									</span>
-								</div>
-							</div>
-
-							<div className="parameter-group">
-								<label className="block text-sm font-medium text-amber-100 mb-2">
-									Pattern Size (grid dimensions)
-								</label>
-								<div className="flex items-center gap-3">
-									<select
-										value={patternSize}
-										onChange={(e) => setPatternSize(parseInt(e.target.value))}
-										disabled={isPlaying}
-										className="px-3 py-2 border-2 border-white rounded bg-amber-700 text-amber-100 disabled:opacity-50 disabled:cursor-not-allowed"
-									>
-										<option value={3}>3×3</option>
-										<option value={4}>4×4</option>
-										<option value={5}>5×5</option>
-										<option value={6}>6×6</option>
-										<option value={7}>7×7</option>
-									</select>
-								</div>
+				{/* Controls */}
+				<div className="heritage-card rounded-lg p-6">
+					<div className="grid gap-6 md:grid-cols-2 lg:gap-8 mb-8">
+						{/* Animation Speed */}
+						<div>
+							<label className="mb-3 block font-elegant text-sm text-[var(--muted)]">
+								Animation Duration (seconds)
+							</label>
+							<div className="flex items-center gap-4">
+								<input
+									type="range"
+									min="1"
+									max="10"
+									step="0.5"
+									value={animationSpeed / 1000}
+									onChange={(e) => setAnimationSpeed(parseFloat(e.target.value) * 1000)}
+									disabled={isPlaying}
+									className="flex-1"
+								/>
+								<span className="w-14 rounded border border-[var(--gold)]/30 bg-[var(--obsidian)] px-3 py-1 font-elegant text-sm text-[var(--gold)] text-center">
+									{(animationSpeed / 1000).toFixed(1)}s
+								</span>
 							</div>
 						</div>
 
-						<div className="flex justify-center items-center gap-6">
-							<button
-								onClick={togglePlayback}
-								className={`px-8 py-3 border-2 border-white text-white rounded-lg hover:opacity-90 transition-colors font-medium shadow-lg ${isPlaying ? 'bg-red-600' : 'bg-green-600'
-									}`}
-							>
-								{isPlaying ? '⏸️ Pause Continuous' : '▶️ Start Continuous'}
-							</button>
-
-							<button
-								onClick={generateNewPattern}
+						{/* Pattern Size */}
+						<div>
+							<label className="mb-3 block font-elegant text-sm text-[var(--muted)]">
+								Pattern Size (grid)
+							</label>
+							<select
+								value={patternSize}
+								onChange={(e) => setPatternSize(parseInt(e.target.value))}
 								disabled={isPlaying}
-								className="px-6 py-3 bg-amber-900 border-2 border-white text-white rounded-lg hover:bg-amber-800 transition-colors font-medium shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-								style={{ backgroundColor: '#5ba293' }}
+								className="w-full rounded border border-[var(--gold)]/30 bg-[var(--surface)] px-4 py-2 font-elegant text-[var(--ivory)] disabled:opacity-50 disabled:cursor-not-allowed"
 							>
-								🎲 Generate New Pattern
-							</button>
+								<option value={3}>3 × 3</option>
+								<option value={4}>4 × 4</option>
+								<option value={5}>5 × 5</option>
+								<option value={6}>6 × 6</option>
+								<option value={7}>7 × 7</option>
+							</select>
 						</div>
+					</div>
+
+					{/* Action Buttons */}
+					<div className="flex flex-wrap justify-center gap-4">
+						<button
+							onClick={togglePlayback}
+							className={`rounded border px-8 py-3 font-heritage text-base tracking-wide transition-all ${
+								isPlaying 
+									? 'border-[var(--temple-red)]/50 bg-[var(--temple-red)]/20 text-[var(--temple-red)]' 
+									: 'border-[var(--gold)]/40 bg-[var(--gold)]/10 text-[var(--gold)] hover:bg-[var(--gold)]/20'
+							}`}
+						>
+							{isPlaying ? '◼ Stop' : '▶ Start Flow'}
+						</button>
+
+						<button
+							onClick={generateNewPattern}
+							disabled={isPlaying}
+							className="rounded border border-[var(--accent)]/40 bg-[var(--accent)]/10 px-6 py-3 font-heritage text-base text-[var(--accent)] transition-all hover:bg-[var(--accent)]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+						>
+							Generate Pattern
+						</button>
 					</div>
 				</div>
 			</div>

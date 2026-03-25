@@ -104,15 +104,15 @@ export const NeuralRecovery: React.FC = () => {
 	}
 
 	return (
-		<div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 px-4 pb-8 pt-28 sm:px-6 sm:pb-10 sm:pt-32 lg:gap-10 lg:px-8">
-			<div className="flex max-w-3xl flex-col items-center gap-3 text-center">
-				<h2 className="headline text-3xl tracking-tight text-[var(--secondary)] sm:text-4xl">
-					Neural Recovery Engine
-				</h2>
-				<p className="text-[11px] font-light uppercase tracking-[0.38em] opacity-50 sm:text-xs">
-					Restore geometric integrity // Status: {status.toUpperCase()}
-				</p>
-			</div>
+		<div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 px-4 pb-8 pt-8 sm:px-6 sm:pb-10 lg:gap-10 lg:px-8">
+			{/* Title - only show when playing */}
+			{status === 'playing' && (
+				<div className="flex max-w-3xl flex-col items-center gap-2 text-center">
+					<p className="font-elegant text-xs uppercase tracking-[0.3em] text-[var(--gold)]">
+						Restoring Pattern • {status.toUpperCase()}
+					</p>
+				</div>
+			)}
 
 			{status === 'idle' ? (
 				<div className="flex w-full items-center justify-center py-16 sm:py-24">

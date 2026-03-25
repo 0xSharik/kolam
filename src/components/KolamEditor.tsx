@@ -74,189 +74,187 @@ export const KolamEditor: React.FC = () => {
 
 	return (
 		<div className="min-h-screen w-full bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--gold)] selection:text-[var(--background)]">
-
-			{/* Mobile Header */}
-			<div className="heritage-border-top sticky top-0 z-20 flex flex-col border-b border-[var(--gold)]/15 bg-[var(--background)]/90 px-5 pb-3 pt-6 backdrop-blur-xl lg:hidden">
-				<div className="mb-3 flex items-center justify-between gap-4">
-					<h1 className="font-heritage text-2xl font-bold tracking-wide text-[var(--ivory)]">Kolam</h1>
-					<Link
-						href="/game"
-						className="border border-[var(--temple-red)]/30 bg-[var(--temple-red)]/5 px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest text-[var(--temple-red)] transition-colors hover:bg-[var(--temple-red)]/10"
-					>
-						Play Game
+			
+			{/* Top Navigation Bar */}
+			<header className="heritage-border-top sticky top-0 z-50 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--surface)]/95 px-6 py-4 backdrop-blur-md">
+				<div className="flex items-center gap-4">
+					<div className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--gold)]/40 bg-[var(--surface-elevated)] shadow-lg">
+						<svg viewBox="0 0 24 24" className="h-6 w-6 text-[var(--gold)] animate-kolam-pulse">
+							<circle cx="12" cy="12" r="4" fill="currentColor" />
+							<circle cx="12" cy="5" r="2" fill="currentColor" opacity="0.6" />
+							<circle cx="12" cy="19" r="2" fill="currentColor" opacity="0.6" />
+							<circle cx="5" cy="12" r="2" fill="currentColor" opacity="0.6" />
+							<circle cx="19" cy="12" r="2" fill="currentColor" opacity="0.6" />
+						</svg>
+					</div>
+					<div>
+						<h1 className="font-heritage text-2xl font-semibold text-[var(--ivory)]">Kolam</h1>
+						<p className="font-elegant text-xs uppercase tracking-[0.25em] text-[var(--muted)] hidden sm:block">Sacred Geometry Engine</p>
+					</div>
+				</div>
+				
+				<div className="flex items-center gap-3">
+					<Link href="/analyze" className="hidden sm:flex items-center gap-2 rounded border border-[var(--accent)]/30 bg-[var(--accent)]/10 px-4 py-2 font-elegant text-sm text-[var(--accent)] transition-all hover:bg-[var(--accent)]/20">
+						<svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+						</svg>
+						Analyze
+					</Link>
+					<Link href="/game" className="flex items-center gap-2 rounded border border-[var(--temple-red)]/40 bg-[var(--temple-red)]/10 px-4 py-2 font-elegant text-sm text-[var(--temple-red)] transition-all hover:bg-[var(--temple-red)]/20">
+						<svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+						Play
 					</Link>
 				</div>
-				<p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] opacity-50">Sacred Geometry Engine</p>
-			</div>
+			</header>
 
-			<div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6 px-4 py-4 sm:px-6 sm:py-6 lg:min-h-screen lg:px-8 xl:grid xl:grid-cols-[420px_minmax(0,1fr)] xl:items-stretch xl:gap-0">
-
-				{/* Left Sidebar / Controls */}
-				<div className="order-2 flex min-w-0 flex-col border border-[var(--gold)]/10 bg-[var(--obsidian)] shadow-[10px_0_40px_rgba(0,0,0,0.4)] xl:order-1 xl:min-h-[calc(100vh-3rem)]">
-
-					{/* Desktop Header */}
-					<div className="heritage-border-top hidden border-b border-[var(--gold)]/10 px-8 pb-8 pt-10 lg:block">
-						<div className="flex items-center gap-3 mb-4">
-							{/* Decorative Kolam dot */}
-							<svg viewBox="0 0 24 24" className="h-6 w-6 text-[var(--gold)] animate-kolam-pulse">
-								<circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.8" />
-								<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.3" />
-								<circle cx="12" cy="4" r="2" fill="currentColor" opacity="0.5" />
-								<circle cx="12" cy="20" r="2" fill="currentColor" opacity="0.5" />
-								<circle cx="4" cy="12" r="2" fill="currentColor" opacity="0.5" />
-								<circle cx="20" cy="12" r="2" fill="currentColor" opacity="0.5" />
-							</svg>
-							<h1 className="font-heritage text-5xl font-bold tracking-wide text-[var(--ivory)] xl:text-6xl">Kolam</h1>
-						</div>
-						<p className="font-mono text-[11px] uppercase tracking-[0.4em] text-[var(--gold)] opacity-60">
-							Sacred Geometry Engine
-						</p>
-					</div>
-
-					{/* Heritage Alert Bar */}
-					<div className="hidden shrink-0 items-center justify-between border-b border-[var(--saffron)]/20 bg-gradient-to-r from-[var(--saffron)]/10 to-transparent px-8 py-3 font-mono text-[10px] font-bold text-[var(--saffron)] lg:flex">
-						<span className="flex items-center gap-2">
-							<span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--saffron)]"></span>
-							Pattern Ready
-						</span>
-						<Link href="/game" className="border border-[var(--temple-red)]/30 bg-[var(--temple-red)]/10 px-3 py-1 tracking-widest text-[var(--temple-red)] transition-all hover:bg-[var(--temple-red)]/20">
-							PLAY GAME
-						</Link>
-					</div>
-
-					{/* Controls */}
-					<div className="flex flex-1 flex-col gap-8 p-5 sm:p-6 lg:gap-10 lg:p-8">
-						<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+			{/* Main Content */}
+			<div className="mx-auto flex min-h-[calc(100vh-80px)] flex-col xl:flex-row">
+				
+				{/* Left Controls Panel */}
+				<aside className="w-full border-b border-[var(--border-subtle)] bg-[var(--surface)] xl:w-[340px] xl:min-h-[calc(100vh-80px)] xl:border-b-0 xl:border-r">
+					<div className="flex flex-col gap-6 p-6">
+						
+						{/* Controls Card */}
+						<div className="heritage-card rounded-xl p-6">
+							<h2 className="font-heritage text-lg text-[var(--ivory)] mb-6">Controls</h2>
+							
 							{/* Size Control */}
-							<div className="group relative">
-								<div className="absolute -inset-1 bg-gradient-to-r from-[var(--gold)]/10 to-transparent opacity-0 blur transition-opacity group-hover:opacity-100"></div>
-								<div className="relative flex h-full flex-col gap-5 border border-[var(--gold)]/8 bg-[var(--surface)] p-5">
-									<div className="flex items-center justify-between gap-3">
-										<label className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--gold)]/70">
-											<span className="inline-block h-2 w-2 animate-pulse rounded-full bg-[var(--gold)]"></span>
-											Pattern Complexity
-										</label>
-										<div className="border border-[var(--gold)]/25 bg-[var(--obsidian)] px-3 py-1 font-mono text-sm font-bold text-[var(--gold)]">
-											{size}
-										</div>
+							<div className="mb-6">
+								<div className="flex items-center justify-between mb-3">
+									<label className="font-elegant text-xs font-medium uppercase tracking-[0.15em] text-[var(--muted)]">
+										Pattern Size
+									</label>
+									<div className="rounded border border-[var(--gold)]/30 bg-[var(--obsidian)] px-3 py-1 font-elegant text-sm text-[var(--gold-light)]">
+										{size} × {size}
 									</div>
-									<input
-										type="range"
-										min="3"
-										max="15"
-										value={size}
-										onChange={(e) => setSize(parseInt(e.target.value))}
-										className="h-1 w-full appearance-none rounded-full bg-[var(--gold)]/15"
-										style={{ accentColor: '#D4A574' }}
-									/>
 								</div>
+								<input
+									type="range"
+									min="3"
+									max="15"
+									value={size}
+									onChange={(e) => setSize(parseInt(e.target.value))}
+									className="w-full"
+								/>
 							</div>
 
 							{/* Speed Control */}
-							<div className="group relative">
-								<div className="absolute -inset-1 bg-gradient-to-r from-[var(--saffron)]/10 to-transparent opacity-0 blur transition-opacity group-hover:opacity-100"></div>
-								<div className="relative flex h-full flex-col gap-5 border border-[var(--saffron)]/8 bg-[var(--surface)] p-5">
-									<div className="flex items-center justify-between gap-3">
-										<label className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--saffron)]/70">
-											<span className="inline-block h-2 w-2 animate-pulse rounded-full bg-[var(--saffron)]"></span>
-											Rhythm
-										</label>
-										<div className="border border-[var(--saffron)]/25 bg-[var(--obsidian)] px-3 py-1 font-mono text-sm font-bold text-[var(--saffron)]">
-											{animationSpeed}
-										</div>
+							<div className="mb-6">
+								<div className="flex items-center justify-between mb-3">
+									<label className="font-elegant text-xs font-medium uppercase tracking-[0.15em] text-[var(--muted)]">
+										Animation Speed
+									</label>
+									<div className="rounded border border-[var(--saffron)]/30 bg-[var(--obsidian)] px-3 py-1 font-elegant text-sm text-[var(--saffron)]">
+										{animationSpeed}
 									</div>
-									<input
-										type="range"
-										min="1"
-										max="10"
-										value={animationSpeed}
-										onChange={(e) => setAnimationSpeed(parseInt(e.target.value))}
-										className="h-1 w-full appearance-none rounded-full bg-[var(--saffron)]/15"
-										style={{ accentColor: '#E8A328' }}
-									/>
 								</div>
+								<input
+									type="range"
+									min="1"
+									max="10"
+									value={animationSpeed}
+									onChange={(e) => setAnimationSpeed(parseInt(e.target.value))}
+									className="w-full"
+								/>
 							</div>
-						</div>
 
-						{/* Action Buttons */}
-						<div className="flex flex-col gap-4 sm:flex-row xl:mt-auto xl:flex-col 2xl:flex-row">
+							{/* Generate Button */}
 							<button
 								onClick={() => generatePattern()}
-								className="animate-gentle-glow flex-1 border border-[var(--gold)]/30 bg-gradient-to-r from-[var(--gold)]/15 to-[var(--saffron)]/10 py-4 font-heritage text-sm font-bold tracking-[0.15em] text-[var(--ivory)] transition-all hover:from-[var(--gold)]/25 hover:to-[var(--saffron)]/20 hover:text-[var(--warm-white)]"
+								className="btn-shine w-full rounded-lg border border-[var(--gold)]/40 bg-gradient-to-r from-[var(--gold)]/15 to-[var(--saffron)]/10 py-4 font-heritage text-base font-medium tracking-wide text-[var(--ivory)] transition-all hover:border-[var(--gold)]/60 hover:from-[var(--gold)]/25 hover:to-[var(--saffron)]/20"
 							>
-								Generate Pattern
+								Generate New Pattern
 							</button>
 
+							{/* Animate Button */}
 							{currentPattern && (
 								<button
 									onClick={() => setAnimationState((prev) => (prev === 'playing' ? 'stopped' : 'playing'))}
-									className={`flex flex-1 items-center justify-center gap-2 border py-4 font-heritage text-sm font-bold tracking-[0.15em] transition-all ${
+									className={`mt-3 w-full rounded-lg border py-4 font-heritage text-base font-medium tracking-wide transition-all ${
 										animationState === 'playing'
-											? 'border-[var(--saffron)]/40 bg-[var(--saffron)]/15 text-[var(--saffron)] shadow-[inset_0_0_20px_rgba(232,163,40,0.1)]'
-											: 'border-[var(--gold)]/15 bg-transparent text-[var(--gold)]/70 hover:border-[var(--gold)]/30 hover:text-[var(--gold)]'
+											? 'border-[var(--saffron)]/50 bg-[var(--saffron)]/15 text-[var(--saffron)]'
+											: 'border-[var(--gold)]/30 bg-transparent text-[var(--gold)] hover:border-[var(--gold)]/50'
 									}`}
 								>
-									{animationState === 'playing' ? '◼ Pause' : '▶ Animate'}
+									{animationState === 'playing' ? '◼ Stop Animation' : '▶ Animate Pattern'}
 								</button>
 							)}
 						</div>
 
-						{/* Navigation Links */}
-						<Link
-							href="/game"
-							className="flex items-center justify-center border border-[var(--temple-red)]/25 bg-[var(--temple-red)]/5 py-4 font-heritage text-sm font-bold tracking-[0.15em] text-[var(--temple-red)] transition-all hover:bg-[var(--temple-red)]/10"
-						>
-							Neural Recovery Game
-						</Link>
-
-						<Link
-							href="/analyze"
-							className="flex items-center justify-center border border-[var(--secondary)]/20 bg-[var(--secondary)]/5 py-4 font-heritage text-sm font-bold tracking-[0.15em] text-[var(--secondary)] transition-all hover:bg-[var(--secondary)]/10"
-						>
-							Analyze Pattern
-						</Link>
+						{/* Quick Links */}
+						<div className="grid grid-cols-2 gap-3">
+							<Link href="/continuous" className="flex items-center justify-center gap-2 rounded-lg border border-[var(--accent)]/30 bg-[var(--accent)]/10 py-3 font-elegant text-sm text-[var(--accent)] transition-all hover:bg-[var(--accent)]/20">
+								<svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+								</svg>
+								Continuous
+							</Link>
+							<Link href="/analyze" className="flex items-center justify-center gap-2 rounded-lg border border-[var(--muted)]/30 bg-[var(--muted)]/10 py-3 font-elegant text-sm text-[var(--muted)] transition-all hover:bg-[var(--muted)]/20 sm:hidden">
+								Analyze
+							</Link>
+						</div>
 					</div>
 
 					{/* Footer */}
-					<footer className="hidden shrink-0 justify-between border-t border-[var(--gold)]/10 bg-[var(--obsidian)] p-8 font-mono text-[9px] uppercase tracking-[0.2em] text-[var(--gold)]/30 lg:flex">
-						<div>&copy; 2026 Kolam Heritage Project</div>
-						<div className="flex gap-4">
-							<span>Sacred Geometry</span>
+					<footer className="mt-auto border-t border-[var(--border-subtle)] px-6 py-4">
+						<div className="flex items-center justify-between font-elegant text-[10px] text-[var(--muted)]">
+							<span>© 2026 Kolam Heritage</span>
+							<span className="tracking-widest">Preserving Tradition</span>
 						</div>
 					</footer>
-				</div>
+				</aside>
 
-				{/* Right Canvas */}
-				<div className="order-1 kolam-dots-bg relative flex min-h-[52vh] min-w-0 items-center justify-center overflow-hidden border border-[var(--gold)]/10 bg-[var(--obsidian)] sm:min-h-[60vh] xl:order-2 xl:min-h-[calc(100vh-3rem)] xl:border-l-0">
+				{/* Main Canvas Area */}
+				<main className="relative flex flex-1 items-center justify-center overflow-hidden bg-[var(--obsidian)] p-4 sm:p-8 lg:p-12">
+					
+					{/* Background Pattern */}
+					<div className="pointer-events-none absolute inset-0 kolam-dots-bg opacity-40"></div>
+					
+					{/* Corner Ornaments */}
+					<div className="pointer-events-none absolute left-4 top-4 h-20 w-20 border-l border-t border-[var(--gold)]/25 sm:left-8 sm:top-8 sm:h-24 sm:w-24"></div>
+					<div className="pointer-events-none absolute right-4 top-4 h-20 w-20 border-r border-t border-[var(--gold)]/25 sm:right-8 sm:top-8 sm:h-24 sm:w-24"></div>
+					<div className="pointer-events-none absolute bottom-4 left-4 h-20 w-20 border-b border-l border-[var(--gold)]/25 sm:bottom-8 sm:left-8 sm:h-24 sm:w-24"></div>
+					<div className="pointer-events-none absolute bottom-4 right-4 h-20 w-20 border-b border-r border-[var(--gold)]/25 sm:bottom-8 sm:right-8 sm:h-24 sm:w-24"></div>
 
-					{/* Subtle corner ornaments */}
-					<div className="pointer-events-none absolute left-4 top-4 h-12 w-12 border-l-2 border-t-2 border-[var(--gold)]/15" />
-					<div className="pointer-events-none absolute right-4 top-4 h-12 w-12 border-r-2 border-t-2 border-[var(--gold)]/15" />
-					<div className="pointer-events-none absolute bottom-4 left-4 h-12 w-12 border-b-2 border-l-2 border-[var(--gold)]/15" />
-					<div className="pointer-events-none absolute bottom-4 right-4 h-12 w-12 border-b-2 border-r-2 border-[var(--gold)]/15" />
+					{/* Top Center Ornament */}
+					<div className="pointer-events-none absolute top-6 left-1/2 -translate-x-1/2 sm:top-10">
+						<svg width="60" height="24" viewBox="0 0 60 24" className="text-[var(--gold)]/40">
+							<path d="M30 0 L30 24 M15 6 L30 0 L45 6 M7.5 12 L30 4 L52.5 12" stroke="currentColor" strokeWidth="1" fill="none"/>
+						</svg>
+					</div>
 
-					{/* Download Menu */}
-					<div className="absolute right-4 top-4 z-20 flex gap-2 lg:right-8 lg:top-8">
-						<div className="download-menu relative">
+					{/* Download Button */}
+					<div className="absolute right-4 top-4 z-20 sm:right-8 sm:top-8">
+						<div className="relative">
 							<button
 								onClick={() => setShowDownloadMenu(!showDownloadMenu)}
 								disabled={isExporting}
-								className="flex h-10 items-center gap-2 border border-[var(--gold)]/20 bg-[var(--obsidian)]/80 px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--gold)]/70 backdrop-blur-xl transition-all hover:border-[var(--gold)]/40 hover:text-[var(--gold)] disabled:opacity-50"
+								className="flex items-center gap-2 rounded-lg border border-[var(--gold)]/30 bg-[var(--surface)]/90 px-5 py-2.5 font-elegant text-sm text-[var(--gold)] backdrop-blur-sm transition-all hover:border-[var(--gold)]/50 hover:bg-[var(--surface)]"
 							>
-								{isExporting ? <span className="animate-spin">⟳</span> : '↓'} Save
+								{isExporting ? (
+									<span className="animate-spin">⟳</span>
+								) : (
+									<svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+									</svg>
+								)}
+								Save
 							</button>
 
 							{showDownloadMenu && (
-								<div className="absolute right-0 mt-3 min-w-[200px] border border-[var(--gold)]/15 bg-[var(--obsidian)] py-2 shadow-2xl backdrop-blur-3xl">
+								<div className="absolute right-0 mt-2 min-w-[180px] overflow-hidden rounded-lg border border-[var(--border-medium)] bg-[var(--surface-elevated)] shadow-2xl">
 									<button
 										onClick={() => { exportPattern('svg'); setShowDownloadMenu(false); }}
-										className="w-full border-b border-[var(--gold)]/10 px-5 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--gold)]/60 transition-colors hover:bg-[var(--gold)]/10 hover:text-[var(--gold)]"
+										className="w-full px-5 py-3 text-left font-elegant text-sm text-[var(--muted)] transition-colors hover:bg-[var(--gold)]/10 hover:text-[var(--gold)]"
 									>
 										Save as SVG
 									</button>
 									<button
 										onClick={() => { exportPattern('png'); setShowDownloadMenu(false); }}
-										className="w-full px-5 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--gold)]/60 transition-colors hover:bg-[var(--saffron)]/10 hover:text-[var(--saffron)]"
+										className="w-full px-5 py-3 text-left font-elegant text-sm text-[var(--muted)] transition-colors hover:bg-[var(--saffron)]/10 hover:text-[var(--saffron)]"
 									>
 										Save as PNG
 									</button>
@@ -265,23 +263,23 @@ export const KolamEditor: React.FC = () => {
 						</div>
 					</div>
 
-					{/* The Kolam Pattern */}
+					{/* Kolam Display */}
 					{currentPattern ? (
-						<div ref={kolamRef} className="animate-fade-in-up flex h-full w-full items-center justify-center p-4 sm:p-6 lg:p-10">
-							<div className="flex w-full max-w-[88vw] justify-center transition-transform duration-1000 sm:max-w-[80vw] xl:max-w-full xl:scale-[0.94] 2xl:scale-100">
+						<div ref={kolamRef} className="animate-fade-in-up flex h-full w-full items-center justify-center">
+							<div className="flex w-full max-w-[95%] justify-center lg:max-w-[90%]">
 								<KolamDisplay
 									pattern={currentPattern}
 									animate={animationState === 'playing'}
 									animationState={animationState}
 									animationTiming={animationDuration}
-									className="drop-shadow-[0_0_40px_rgba(212,165,116,0.1)] transition-all"
+									className="drop-shadow-[0_0_60px_rgba(201,162,39,0.2)]"
 								/>
 							</div>
 						</div>
 					) : (
-						<HeritageLoader message="Tracing Sacred Geometry..." />
+						<HeritageLoader message="Generating Sacred Pattern..." />
 					)}
-				</div>
+				</main>
 			</div>
 		</div>
 	);
