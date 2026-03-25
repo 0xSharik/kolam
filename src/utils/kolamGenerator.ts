@@ -356,28 +356,54 @@ export class KolamGenerator {
 	/**
 	 * Literal translation of draw_kolam.m coordinate conversion
 	 */
-	static drawKolam(M: number[][]): KolamPattern {
-		// [m n]=size(M);
+	/**
+	 * Create a pattern from a raw ID matrix (visual perspective)
+	 */
+	static reconstructPattern(matrix: number[][], basePattern?: KolamPattern): KolamPattern {
+		// Crucially, we skip the flip here because the game matrix is already in visual coordinate space
+		return this.drawKolam(matrix, false);
+	}
+
+	/**
+	 * Main entry point - generate kolam pattern using algorithm
+	 */
+	static generateKolam1D(size: number): KolamPattern {
+		console.log(`🎨 Generating 1D Kolam of size ${size}`);
+
+		const matrix = this.proposeKolam1D(size);
+		console.log(`📊 Generated matrix: ${matrix.length}x${matrix[0].length}`);
+
+		// Convert to visual kolam pattern using draw_kolam logic (with flip)
+		const pattern = this.drawKolam(matrix, true);
+		console.log(`✅ Created kolam with ${pattern.dots.length} dots and ${pattern.curves.length} curves`);
+
+		return pattern;
+	}
+
+	/**
+	 * Optimized drawKolam with optional flipping
+	 */
+	static drawKolam(M: number[][], flip: boolean = true): KolamPattern {
 		const m = M.length;
 		const n = M[0].length;
 
-		// M=M(end:-1:1,:); - flip vertically
-		const flippedM: number[][] = [];
-		for (let i = m - 1; i >= 0; i--) {
-			flippedM[m - 1 - i] = [...M[i]];
+		const processedM: number[][] = [];
+		if (flip) {
+			for (let i = m - 1; i >= 0; i--) {
+				processedM[m - 1 - i] = [...M[i]];
+			}
+		} else {
+			for (let i = 0; i < m; i++) {
+				processedM[i] = [...M[i]];
+			}
 		}
 
 		const dots: Dot[] = [];
 		const curves: Line[] = [];
 
-		// for i=1:m
-		//     for j=1:n
 		for (let i = 0; i < m; i++) {
 			for (let j = 0; j < n; j++) {
-				// if M(i,j)>0
-				if (flippedM[i][j] > 0) {
-					// Add dot at grid position
-					// plot(j,i,[clr '.']) - dot at grid position
+				if (processedM[i][j] > 0) {
 					dots.push({
 						id: `dot-${i}-${j}`,
 						center: {
@@ -389,17 +415,13 @@ export class KolamGenerator {
 						filled: true
 					});
 
-					// this=pt{M(i,j)};
-					// plot(j+real(this),i+imag(this),clr,'Linewidth',1.5)
-					const patternIndex = flippedM[i][j] - 1;  // Convert to 0-indexed
+					const patternIndex = processedM[i][j] - 1;
 					if (patternIndex >= 0 && patternIndex < KOLAM_CURVE_PATTERNS.length) {
 						const pattern = KOLAM_CURVE_PATTERNS[patternIndex];
 
-						// Convert pattern coordinates: j+real(this), i+imag(this)
-						// Create a single curve with all points (keep curve grouped)
 						const curvePoints: CurvePoint[] = pattern.points.map(point => ({
-							x: ((j + 1) + point.x) * this.CELL_SPACING,  // j+real(this)
-							y: ((i + 1) + point.y) * this.CELL_SPACING,  // i+imag(this)
+							x: ((j + 1) + point.x) * this.CELL_SPACING,
+							y: ((i + 1) + point.y) * this.CELL_SPACING,
 							controlX: point.controlX !== undefined ?
 								((j + 1) + point.controlX) * this.CELL_SPACING : undefined,
 							controlY: point.controlY !== undefined ?
@@ -419,14 +441,13 @@ export class KolamGenerator {
 			}
 		}
 
-		// Create the grid structure
 		const grid = {
 			size: Math.max(m, n),
 			cells: Array(m).fill(null).map((_, i) =>
 				Array(n).fill(null).map((_, j) => ({
 					row: i,
 					col: j,
-					patternId: flippedM[i][j],
+					patternId: processedM[i][j],
 					dotCenter: {
 						x: (j + 1) * this.CELL_SPACING,
 						y: (i + 1) * this.CELL_SPACING
@@ -437,7 +458,7 @@ export class KolamGenerator {
 		};
 
 		return {
-			id: `kolam-${m}x${n}`,
+			id: `kolam-${m}x${n}-${Date.now()}`,
 			name: `Kolam ${m}×${n}`,
 			grid,
 			curves,
@@ -450,21 +471,5 @@ export class KolamGenerator {
 			created: new Date(),
 			modified: new Date()
 		};
-	}
-
-	/**
-	 * Main entry point - generate kolam pattern using algorithm
-	 */
-	static generateKolam1D(size: number): KolamPattern {
-		console.log(`🎨 Generating 1D Kolam of size ${size}`);
-
-		const matrix = this.proposeKolam1D(size);
-		console.log(`📊 Generated matrix: ${matrix.length}x${matrix[0].length}`);
-
-		// Convert to visual kolam pattern using draw_kolam logic
-		const pattern = this.drawKolam(matrix);
-		console.log(`✅ Created kolam with ${pattern.dots.length} dots and ${pattern.curves.length} curves`);
-
-		return pattern;
 	}
 }

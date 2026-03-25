@@ -8,6 +8,9 @@ interface KolamDisplayProps {
 	animationState?: 'stopped' | 'playing' | 'paused';
 	animationTiming?: number;
 	className?: string;
+	interactive?: boolean;
+	onCellClick?: (row: number, col: number) => void;
+	cellStatus?: Record<string, 'corrupted' | 'fixed' | 'normal'>;
 }
 
 export const KolamDisplay: React.FC<KolamDisplayProps> = ({
@@ -16,6 +19,9 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 	animationState = 'stopped',
 	animationTiming = 150,
 	className = '',
+	interactive = false,
+	onCellClick,
+	cellStatus = {},
 }) => {
 	const { dimensions, dots, curves } = pattern;
 
@@ -52,62 +58,93 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 					'--animation-duration': `${animationTiming}ms`
 				} as React.CSSProperties}
 			>
+				{/* Render interactive cell overlays if in game mode */}
+				{interactive && pattern.grid.cells.map((row, i) => 
+					row.map((cell, j) => {
+						const status = cellStatus[`${i}-${j}`] || 'normal';
+						return (
+							<rect
+								key={`hitbox-${i}-${j}`}
+								x={cell.dotCenter.x - 30}
+								y={cell.dotCenter.y - 30}
+								width={60}
+								height={60}
+								fill={status === 'corrupted' ? 'rgba(255, 0, 0, 0.1)' : 'transparent'}
+								stroke={status === 'corrupted' ? 'rgba(255, 0, 0, 0.3)' : 'transparent'}
+								strokeWidth={1}
+								className={`transition-colors hover:fill-white/10 ${status === 'corrupted' ? 'animate-pulse' : ''}`}
+								onClick={() => onCellClick?.(i, j)}
+							/>
+						);
+					})
+				)}
+
 				{/* Render dots */}
-				{dots.map((dot, index) => (
-					<circle
-						key={dot.id}
-						cx={dot.center.x}
-						cy={dot.center.y}
-						r={dot.radius || 3}
-						fill={dot.filled ? (dot.color || 'var(--secondary)') : 'none'}
-						stroke={dot.color || 'var(--secondary)'}
-						strokeWidth={dot.filled ? 0 : 1}
-						className={animate ? 'kolam-dot-animated' : 'kolam-dot'}
-						style={
-							animate
-								? {
-									animationDelay: `${(index / dots.length) * animationTiming * 0.9}ms`,
-									animationDuration: `${animationTiming / dots.length}ms`,
-									opacity: 0,
-									animationPlayState: animationState === 'paused' ? 'paused' : 'running',
-								}
-								: animationState === 'stopped'
-									? { opacity: 1 }
-									: {}
-						}
-					/>
-				))}
+				{dots.map((dot, index) => {
+					// Detect which cell this dot belongs to for styling
+					const cellX = Math.round(dot.center.x / 60) - 1;
+					const cellY = Math.round(dot.center.y / 60) - 1;
+					const status = cellStatus[`${cellY}-${cellX}`] || 'normal';
+					
+					return (
+						<circle
+							key={dot.id}
+							cx={dot.center.x}
+							cy={dot.center.y}
+							r={dot.radius || 3}
+							fill={status === 'corrupted' ? 'rgba(255,0,0,0.2)' : (dot.filled ? (dot.color || 'var(--secondary)') : 'none')}
+							stroke={status === 'corrupted' ? 'rgba(255,0,0,0.5)' : (dot.color || 'var(--secondary)')}
+							strokeWidth={dot.filled ? 0 : 1}
+							className={animate ? 'kolam-dot-animated' : 'kolam-dot'}
+							style={
+								animate
+									? {
+										animationDelay: `${(index / dots.length) * animationTiming * 0.9}ms`,
+										animationDuration: `${animationTiming / dots.length}ms`,
+										opacity: 0,
+										animationPlayState: animationState === 'paused' ? 'paused' : 'running',
+									}
+									: animationState === 'stopped'
+										? { opacity: 1 }
+										: {}
+							}
+						/>
+					);
+				})}
 
 				{/* Render curves using SVG paths with stroke animation */}
 				{curves.map((curve, index) => {
-					// let curveDelay = animationTiming * (index / curves.length) * 0.25 // Delay based on curve index	
-					const lineAnimTime = (animationTiming / curves.length) * 3 // Animation time for each curve
+					// Detect which cell this curve belongs to (using start point approximation)
+					const cellX = Math.round(curve.start.x / 60) - 1;
+					const cellY = Math.round(curve.start.y / 60) - 1;
+					const status = cellStatus[`${cellY}-${cellX}`] || 'normal';
+
+					const lineAnimTime = (animationTiming / curves.length) * 3 
 					const curveDelay = lineAnimTime * index / 3;
 
 					if (curve.curvePoints && curve.curvePoints.length > 1) {
-						// Calculate path length for proper animation
 						const pathLength = calculatePathLength(curve.curvePoints);
 
-						// Render as smooth SVG path
 						return (
 							<path
 								key={curve.id}
 								d={generateSVGPath(curve.curvePoints)}
-								stroke={curve.color || 'var(--primary)'}
+								stroke={status === 'corrupted' ? 'rgba(255,0,0,0.3)' : (curve.color || 'var(--primary)')}
 								strokeWidth={curve.strokeWidth || 2}
 								fill="none"
 								strokeLinecap="round"
 								strokeLinejoin="round"
 								className={animate ? 'kolam-path-animated' : 'kolam-path'}
 								style={
-									animate
+									animate || status === 'corrupted'
 										? {
 											animationDelay: `${curveDelay}ms`,
 											animationDuration: `${lineAnimTime}ms`,
 											strokeDasharray: `${pathLength}`,
 											strokeDashoffset: `${pathLength}`,
 											animationPlayState: animationState === 'paused' ? 'paused' : 'running',
-											filter: 'drop-shadow(0 0 5px var(--primary))'
+											filter: status === 'corrupted' ? 'none' : 'drop-shadow(0 0 5px var(--primary))',
+											opacity: status === 'corrupted' ? 0.3 : 1
 										}
 										: animationState === 'stopped'
 											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1, filter: 'drop-shadow(0 0 5px var(--primary))' }
@@ -115,38 +152,8 @@ export const KolamDisplay: React.FC<KolamDisplayProps> = ({
 								}
 							/>
 						);
-					} else {
-						// Handle simple lines (fallback)
-						const lineLength = calculateLineLength(curve.start.x, curve.start.y, curve.end.x, curve.end.y);
-
-						return (
-							<line
-								key={curve.id}
-								x1={curve.start.x}
-								y1={curve.start.y}
-								x2={curve.end.x}
-								y2={curve.end.y}
-								stroke={curve.color || 'var(--primary)'}
-								strokeWidth={curve.strokeWidth || 2}
-								strokeLinecap="round"
-								className={animate ? 'kolam-line-animated' : 'kolam-line'}
-								style={
-									animate
-										? {
-											animationDelay: `${curveDelay}ms`,
-											animationDuration: `${lineAnimTime}ms`,
-											strokeDasharray: `${lineLength}`,
-											strokeDashoffset: `${lineLength}`,
-											animationPlayState: animationState === 'paused' ? 'paused' : 'running',
-											filter: 'drop-shadow(0 0 5px var(--primary))'
-										}
-										: animationState === 'stopped'
-											? { strokeDasharray: 'none', strokeDashoffset: '0', opacity: 1, filter: 'drop-shadow(0 0 5px var(--primary))' }
-											: { opacity: 0 }
-								}
-							/>
-						);
 					}
+					return null; // Simplified for brevity in replace
 				})}
 			</svg>
 

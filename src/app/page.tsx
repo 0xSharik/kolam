@@ -1,28 +1,17 @@
-import { Header } from '@/components/Header';
 import { KolamEditor } from '@/components/KolamEditor';
+import { HeritageLoader } from '@/components/HeritageLoader';
 import { Suspense } from 'react';
 
 export default function HeadacheKolamPage() {
 	return (
-		<main className="min-h-screen chaos-mode flex flex-col">
-			<div className="scanlines" />
-			<Header 
-				title="HEADACHE" 
-				subtitle="Digital Kolam Installation // V1.0"
-			/>
-			<div className="flex-1 flex flex-col">
-				<Suspense fallback={<div className="p-20 text-center headline animate-pulse">Initializing Neural Grid...</div>}>
-					<KolamEditor />
-				</Suspense>
-			</div>
-			
-			<footer className="p-8 flex justify-between items-center border-t border-white/5 text-[10px] font-mono opacity-30 uppercase tracking-widest bg-[#131313]">
-				<div>© 2026 HEADACHE INSTALLATION LABS</div>
-				<div className="flex gap-4">
-					<span>LAT: 51.5074° N</span>
-					<span>LON: 0.1278° W</span>
+		<main className="min-h-screen w-full bg-[var(--background)] relative text-[var(--foreground)]">
+			<Suspense fallback={
+				<div className="h-screen w-full flex items-center justify-center bg-[var(--background)]">
+					<HeritageLoader message="Awakening the Grid..." size="lg" />
 				</div>
-			</footer>
+			}>
+				<KolamEditor />
+			</Suspense>
 		</main>
 	);
 }
