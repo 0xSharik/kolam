@@ -104,208 +104,227 @@ export const NeuralRecovery: React.FC = () => {
 	}
 
 	return (
-		<div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-4 pb-8 pt-4 sm:px-6 sm:pt-6">
-			{/* Title - only show when playing */}
-			{status === 'playing' && (
-				<div className="flex flex-col items-center gap-1 text-center">
-					<p className="font-elegant text-[10px] uppercase tracking-[0.25em] text-[var(--gold)]">
-						Restoring Pattern • {status.toUpperCase()}
-					</p>
-				</div>
-			)}
+		<div className="w-full">
+			<div className="mx-auto w-full max-w-[1400px]">
 
-			{status === 'idle' ? (
-				<div className="flex w-full items-center justify-center py-16 sm:py-24">
-					<div className="flex max-w-2xl flex-col items-center gap-8 text-center">
-						<div className="grid grid-cols-5 gap-1 opacity-20">
-							{Array.from({ length: 25 }).map((_, i) => (
-								<div
-									key={i}
-									className="h-8 w-8 border border-white/20"
-									style={{ background: i % 7 === 0 ? 'var(--primary)' : 'transparent' }}
-								/>
-							))}
-						</div>
-						<button
-							onClick={startNewGame}
-							className="headline bg-white/5 px-8 py-5 text-xl tracking-[0.18em] text-[var(--primary)] border-2 border-[var(--primary)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-black sm:px-12 sm:text-2xl"
-						>
-							Initialize Recovery Sequence
-						</button>
-						<div className="flex flex-wrap items-center justify-center gap-4">
-							{[3, 5, 7].map((size) => (
-								<button
-									key={size}
-									onClick={() => setGridSize(size)}
-									className={`border px-4 py-2 font-mono text-xs uppercase tracking-widest transition-all ${
-										gridSize === size
-											? 'border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)]'
-											: 'border-white/20 text-white/40 hover:border-white/40 hover:text-white/60'
-									}`}
-								>
-									{size}x{size}
-								</button>
-							))}
-						</div>
-					</div>
-				</div>
-			) : (
-				<div className="flex w-full flex-col gap-6 xl:grid xl:grid-cols-[minmax(260px,320px)_minmax(0,1fr)_minmax(260px,320px)] xl:items-start">
-					<div className="order-2 w-full xl:order-1">
-						<div className="border border-white/10 bg-white/5 p-4 sm:p-5 xl:sticky xl:top-28">
-							<div className="mb-4 text-center font-mono text-[10px] uppercase tracking-[0.4em] opacity-40">
-								Neural DNA Toolbox
-							</div>
-							<div className="grid grid-cols-4 gap-2 sm:gap-3">
-								{KOLAM_CURVE_PATTERNS.slice(0, 16).map((tile) => (
-									<button
-										key={tile.id}
-										onClick={() => handleTileSelect(tile.id)}
-										disabled={!selectedCell}
-										title={`Tile 0x0${tile.id.toString(16)}`}
-										className={`group flex aspect-square w-full items-center justify-center border p-3 transition-all duration-200 ${
-											selectedCell
-												? 'border-white/20 opacity-100 hover:border-[var(--primary)] hover:bg-[var(--primary)]/10'
-												: 'border-white/5 opacity-35'
-										}`}
-									>
-										<svg viewBox="-1.35 -1.35 2.7 2.7" className="h-full w-full opacity-80 transition-opacity group-hover:opacity-100">
-											<path
-												d={generateSVGPath(tile.points)}
-												stroke="currentColor"
-												strokeWidth="0.16"
-												fill="none"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-											<circle cx="0" cy="0" r="0.1" fill="var(--secondary)" opacity="0.5" />
-										</svg>
-									</button>
+				{status === 'idle' ? (
+					<div className="flex w-full items-center justify-center py-24 sm:py-32 lg:py-40">
+						<div className="flex max-w-3xl flex-col items-center gap-12 text-center">
+							<div className="grid grid-cols-5 gap-2 opacity-30">
+								{Array.from({ length: 25 }).map((_, i) => (
+									<div
+										key={i}
+										className="h-10 w-10 rounded-sm sm:h-12 sm:w-12"
+										style={{ backgroundColor: i % 7 === 0 ? 'var(--primary)' : 'var(--border-subtle)' }}
+									/>
 								))}
 							</div>
-						</div>
-					</div>
+							
+							<div>
+								<h2 className="font-heritage text-5xl text-[var(--foreground)] sm:text-6xl lg:text-7xl">
+									Recover Sequence
+								</h2>
+								<p className="mt-6 font-elegant text-sm uppercase tracking-[0.3em] text-[var(--muted)]">
+									Restore the geometric integrity of the system
+								</p>
+							</div>
 
-					<div className="order-1 flex w-full min-w-0 flex-col items-center gap-4 xl:order-2">
-						<div className="relative flex min-h-[280px] w-full items-center justify-center overflow-hidden border border-white/10 bg-black/30 p-2 sm:min-h-[400px] sm:p-4 lg:min-h-[520px] lg:p-6">
-							{pattern ? (
-								<KolamDisplay
-									pattern={pattern}
-									interactive={true}
-									onCellClick={handleCellClick}
-									cellStatus={cellStatus}
-									className={`max-w-full ${isSolved ? 'animate-pulse' : ''}`}
-								/>
-							) : (
-								<div className="headline flex h-48 w-full max-w-sm items-center justify-center border border-white/10 opacity-20 animate-pulse sm:h-72">
-									Loading Grid...
-								</div>
-							)}
-
-							{status === 'won' && (
-								<div className="absolute inset-0 z-50 flex flex-col items-center justify-center border-2 border-[var(--secondary)] bg-black/85">
-									<div className="flex flex-col items-center gap-6 px-8 text-center">
-										<div className="font-mono text-[10px] uppercase tracking-[0.5em] text-[var(--secondary)] opacity-70">
-											System Integrity: 100%
-										</div>
-										<h3 className="headline animate-bounce text-3xl text-[var(--secondary)]">
-											Neural Integrity Restored
-										</h3>
-										<button
-											onClick={startNewGame}
-											className="headline border-2 border-[var(--secondary)] px-8 py-4 text-lg tracking-widest text-[var(--secondary)] transition-all duration-300 hover:bg-[var(--secondary)] hover:text-black"
-										>
-											Next Level
-										</button>
+							<div className="mt-4 flex flex-col items-center gap-8">
+								<button
+									onClick={startNewGame}
+									className="group relative flex items-center justify-center gap-4 rounded-md bg-[var(--foreground)] px-12 py-5 font-elegant text-sm uppercase tracking-widest text-[var(--background)] transition-all hover:-translate-y-1 hover:bg-[var(--primary)] hover:shadow-xl hover:shadow-[var(--primary)]/20"
+								>
+									<span>Initialize</span>
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4 transition-transform group-hover:translate-x-1">
+										<path d="M5 12h14m-7-7l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
+									</svg>
+								</button>
+								
+								<div className="flex flex-wrap items-center justify-center gap-4">
+									<span className="font-elegant text-xs uppercase tracking-[0.2em] text-[var(--muted)]">Complexity Matrix:</span>
+									<div className="flex gap-2">
+										{[3, 5, 7].map((size) => (
+											<button
+												key={size}
+												onClick={() => setGridSize(size)}
+												className={`rounded-md px-4 py-2 font-elegant text-xs transition-all ${
+													gridSize === size
+														? 'bg-[var(--border-subtle)] text-[var(--foreground)] shadow-sm'
+														: 'text-[var(--muted)] hover:bg-[var(--surface-elevated)] hover:text-[var(--foreground)]'
+												}`}
+											>
+												{size} × {size}
+											</button>
+										))}
 									</div>
 								</div>
-							)}
+							</div>
 						</div>
 					</div>
-
-					<div className="order-3 flex w-full flex-col gap-4 font-mono text-[10px] uppercase xl:sticky xl:top-28">
-						<div className="space-y-3 border border-white/10 bg-white/5 p-4">
-							<div className="mb-1 text-[10px] tracking-[0.3em] text-[var(--primary)]">Instructions</div>
-							<div className="space-y-2 leading-relaxed opacity-60">
-								<div className="flex gap-2">
-									<span className="shrink-0 text-[var(--secondary)]">01</span>
-									<span>Click a corrupted cell (red pulse)</span>
-								</div>
-								<div className="flex gap-2">
-									<span className="shrink-0 text-[var(--secondary)]">02</span>
-									<span>Select correct tile from DNA toolbox</span>
-								</div>
-								<div className="flex gap-2">
-									<span className="shrink-0 text-[var(--secondary)]">03</span>
-									<span>Match all adjacency points</span>
-								</div>
-								<div className="flex gap-2">
-									<span className="shrink-0 text-[var(--secondary)]">04</span>
-									<span>Restore geometric symmetry</span>
-								</div>
+				) : (
+					<div className="flex flex-col gap-16 lg:gap-24">
+						
+						{/* Header */}
+						<div className="flex flex-col items-start justify-between gap-6 border-b border-[var(--border-subtle)] pb-8 pt-8 lg:flex-row lg:items-end lg:pt-0">
+							<div>
+								<h2 className="font-heritage text-4xl text-[var(--foreground)] lg:text-5xl">Grid Interface</h2>
+								<p className="mt-4 flex items-center gap-4 font-elegant text-xs uppercase tracking-widest text-[var(--muted)]">
+									<span className="h-px w-8 bg-[var(--primary)]"></span>
+									{status === 'playing' ? 'Session Active' : 'Sequence Complete'}
+								</p>
 							</div>
-						</div>
-
-						<div className="space-y-2 border border-white/10 p-4 opacity-60">
-							<div className="flex justify-between">
-								<span>Complexity</span>
-								<span className="text-[var(--primary)]">{gridSize}x{gridSize}</span>
-							</div>
-							<div className="flex justify-between">
-								<span>Corruptions</span>
-								<span className="text-[var(--secondary)]">{corruptedIndices.length}</span>
-							</div>
-							<div className="flex justify-between">
-								<span>Resolved</span>
-								<span className="text-green-400">
-									{
-										corruptedIndices.filter((idx) => {
+							<div className="flex flex-wrap items-center gap-6 font-elegant text-xs uppercase tracking-widest">
+								<div className="flex items-center gap-2">
+									<span className="text-[var(--muted)]">Corruptions:</span>
+									<span className="font-mono text-[var(--temple-red)] text-sm">{corruptedIndices.length}</span>
+								</div>
+								<div className="h-4 w-px bg-[var(--border-subtle)]"></div>
+								<div className="flex items-center gap-2">
+									<span className="text-[var(--muted)]">Resolved:</span>
+									<span className="font-mono text-[var(--gold)] text-sm">
+										{corruptedIndices.filter((idx) => {
 											const [r, c] = idx.split('-').map(Number);
 											return currentIds[r]?.[c] === correctIds[r]?.[c];
-										}).length
-									}
-									/{corruptedIndices.length}
-								</span>
-							</div>
-							<div className="flex justify-between">
-								<span>Selected</span>
-								<span className="text-white/80">{selectedCell ? `[${selectedCell.r}, ${selectedCell.c}]` : '--'}</span>
+										}).length}/{corruptedIndices.length}
+									</span>
+								</div>
 							</div>
 						</div>
 
-						<div className="space-y-2 border border-white/10 p-4 opacity-50">
-							<div className="mb-2 tracking-[0.3em] text-[var(--primary)]">Cell States</div>
-							<div className="flex items-center gap-2">
-								<div className="h-3 w-3 border border-red-500 bg-red-500/20" />
-								<span>Corrupted</span>
+						{/* Main Layout */}
+						<div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16 xl:gap-24">
+							
+							{/* Left: DNA Toolbox */}
+							<div className="lg:col-span-3 xl:col-span-3">
+								<h3 className="mb-8 font-elegant text-xs uppercase tracking-[0.3em] text-[var(--primary)]">Neural DNA</h3>
+								
+								<div className="grid grid-cols-4 gap-3">
+									{KOLAM_CURVE_PATTERNS.slice(0, 16).map((tile) => (
+										<button
+											key={tile.id}
+											onClick={() => handleTileSelect(tile.id)}
+											disabled={!selectedCell}
+											title={`Tile 0x0${tile.id.toString(16)}`}
+											className={`group relative flex aspect-square w-full items-center justify-center transition-all duration-300 ${
+												selectedCell
+													? 'cursor-pointer hover:bg-[var(--surface-elevated)]'
+													: 'cursor-not-allowed opacity-30'
+											}`}
+										>
+											<div className="absolute inset-0 border border-[var(--border-subtle)] transition-opacity group-hover:opacity-0" />
+											<div className="absolute inset-0 border border-[var(--primary)]/30 bg-[var(--primary)]/5 opacity-0 transition-opacity group-hover:opacity-100" />
+											<svg viewBox="-1.35 -1.35 2.7 2.7" className="relative h-full w-full opacity-70 transition-opacity group-hover:opacity-100">
+												<path
+													d={generateSVGPath(tile.points)}
+													stroke="currentColor"
+													strokeWidth="0.16"
+													fill="none"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													className={selectedCell ? 'text-[var(--foreground)] group-hover:text-[var(--primary)]' : 'text-[var(--muted)]'}
+												/>
+												<circle cx="0" cy="0" r="0.1" fill="var(--secondary)" opacity="0.4" />
+											</svg>
+										</button>
+									))}
+								</div>
+								
+								{selectedCell ? (
+									<div className="mt-8 border-l border-[var(--primary)] pl-4">
+										<p className="font-elegant text-[10px] uppercase tracking-widest text-[var(--muted)]">Target Selected</p>
+										<p className="mt-1 font-mono text-xs text-[var(--foreground)]">[{selectedCell.r}, {selectedCell.c}]</p>
+									</div>
+								) : (
+									<div className="mt-8 border-l border-[var(--border-medium)] pl-4">
+										<p className="font-elegant text-[10px] uppercase tracking-widest text-[var(--muted)]">No Target</p>
+										<p className="mt-1 font-elegant text-xs text-[var(--muted)]">Select node from grid</p>
+									</div>
+								)}
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-3 w-3 border border-[var(--secondary)] bg-[var(--secondary)]/20" />
-								<span>Selected</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-3 w-3 border border-green-500 bg-green-500/20" />
-								<span>Fixed</span>
-							</div>
-						</div>
 
-						<div className="flex flex-col gap-2">
-							<button
-								onClick={startNewGame}
-								className="w-full border border-white/20 py-3 tracking-widest text-white/50 transition-all duration-200 hover:border-[var(--primary)] hover:text-[var(--primary)]"
-							>
-								Restart Session
-							</button>
-							<button
-								onClick={() => setStatus('idle')}
-								className="w-full border border-white/10 py-2 text-[9px] tracking-widest text-white/30 transition-colors hover:text-white/50"
-							>
-								Terminate Session
-							</button>
+							{/* Center: Interactive Canvas */}
+							<div className="lg:col-span-6 xl:col-span-6">
+								<div className="relative flex min-h-[400px] w-full items-center justify-center sm:min-h-[500px] lg:min-h-[600px] mix-blend-multiply">
+									{pattern ? (
+										<KolamDisplay
+											pattern={pattern}
+											interactive={status === 'playing'}
+											onCellClick={handleCellClick}
+											cellStatus={cellStatus}
+											className={`max-w-full transition-all duration-1000 ${status === 'won' ? 'scale-105 opacity-80' : ''}`}
+										/>
+									) : (
+										<div className="flex flex-col items-center gap-6 text-[var(--muted)]">
+											<span className="h-8 w-8 rounded-full border-2 border-[var(--border-medium)] border-t-[var(--primary)] animate-spin"></span>
+											<span className="font-elegant text-xs uppercase tracking-widest">Generating Pattern...</span>
+										</div>
+									)}
+
+									{status === 'won' && (
+										<div className="absolute inset-0 z-50 flex items-center justify-center bg-[var(--background)]/80 backdrop-blur-sm transition-opacity duration-1000">
+											<div className="flex flex-col items-center gap-8 text-center p-8">
+												<div className="flex items-center justify-center h-20 w-20 rounded-md border border-[var(--gold)]/30 bg-[var(--gold)]/5 text-[var(--gold)]">
+													<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="h-10 w-10">
+														<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeLinecap="round" strokeLinejoin="round"/>
+														<polyline points="22 4 12 14.01 9 11.01" strokeLinecap="round" strokeLinejoin="round"/>
+													</svg>
+												</div>
+												<div>
+													<p className="font-elegant text-xs uppercase tracking-[0.4em] text-[var(--gold)]">Sequence 100%</p>
+													<h3 className="mt-3 font-heritage text-5xl text-[var(--foreground)]">Restored</h3>
+												</div>
+												<button
+													onClick={startNewGame}
+													className="mt-4 rounded-md border border-[var(--border-subtle)] px-10 py-4 font-elegant text-xs uppercase tracking-widest text-[var(--foreground)] transition-all hover:border-[var(--gold)] hover:text-[var(--gold)]"
+												>
+													Next Sequence
+												</button>
+											</div>
+										</div>
+									)}
+								</div>
+							</div>
+
+							{/* Right: Operations & Log */}
+							<div className="lg:col-span-3 xl:col-span-3">
+								<h3 className="mb-8 font-elegant text-xs uppercase tracking-[0.3em] text-[var(--primary)]">Operations</h3>
+								
+								<ol className="flex flex-col gap-6">
+									{[
+										{ label: 'Identify', text: 'Locate pulsing red nodes within grid' },
+										{ label: 'Target', text: 'Select corrupted node to arm toolbox' },
+										{ label: 'Execute', text: 'Inject correct neural tile pattern' },
+										{ label: 'Verify', text: 'Restore symmetric flow' }
+									].map((step, i) => (
+										<li key={i} className="flex gap-4">
+											<span className="font-mono text-xs text-[var(--muted)] pt-0.5">0{i + 1}</span>
+											<div>
+												<p className="font-elegant text-xs tracking-widest text-[var(--foreground)]">{step.label}</p>
+												<p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">{step.text}</p>
+											</div>
+										</li>
+									))}
+								</ol>
+
+								<div className="mt-16 flex flex-col gap-4 border-t border-[var(--border-subtle)] pt-12">
+									<button
+										onClick={startNewGame}
+										className="w-full rounded-md border border-[var(--primary)]/30 bg-[var(--surface-elevated)] px-6 py-4 font-elegant text-xs uppercase tracking-widest text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-[var(--background)] shadow-sm"
+									>
+										Restart Matrix
+									</button>
+									<button
+										onClick={() => setStatus('idle')}
+										className="w-full rounded-md border border-[var(--border-medium)] bg-transparent px-6 py-4 font-elegant text-xs uppercase tracking-widest text-[var(--muted)] transition-all hover:border-[var(--temple-red)]/50 hover:bg-[var(--temple-red)]/5 hover:text-[var(--temple-red)]"
+									>
+										Terminate
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	);
 };

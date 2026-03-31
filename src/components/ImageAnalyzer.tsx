@@ -3,19 +3,12 @@
 import { analyzeKolamImage, type KolamEngineResult } from '@/utils/kolamImageAnalysis';
 import React, { ChangeEvent, useState } from 'react';
 
-const ANALYSIS_PROFILES = [
-	{ id: 'heritage-core', name: 'Heritage Core', description: 'Balanced cultural and structural reading.' },
-	{ id: 'lattice-pro', name: 'Lattice Pro', description: 'Stronger focus on grid, nodes, and symmetry.' },
-	{ id: 'ritual-sense', name: 'Ritual Sense', description: 'More emphasis on context and tradition.' },
-];
-
 type AnalysisResult = KolamEngineResult & {
 	fileName: string;
 	fileType: string;
 	fileSizeLabel: string;
 	width: number;
 	height: number;
-	profileName?: string;
 	aiStatus?: 'idle' | 'loading' | 'success' | 'error';
 	aiError?: string;
 	aiAnalysis?: {
@@ -53,13 +46,9 @@ export const ImageAnalyzer: React.FC = () => {
 	const [isAnalyzing, setIsAnalyzing] = useState(false);
 	const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [profileId, setProfileId] = useState(ANALYSIS_PROFILES[0].id);
-
 	const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;
-		const selectedProfile = ANALYSIS_PROFILES.find((p) => p.id === profileId) || ANALYSIS_PROFILES[0];
-
 		setError(null);
 		setIsAnalyzing(true);
 		if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -93,7 +82,6 @@ export const ImageAnalyzer: React.FC = () => {
 				fileSizeLabel: formatBytes(file.size),
 				width: image.width,
 				height: image.height,
-				profileName: selectedProfile.name,
 				aiStatus: 'loading',
 				...engineResult,
 			};
@@ -119,7 +107,7 @@ export const ImageAnalyzer: React.FC = () => {
 					imageBase64: base64,
 					mimeType: file.type || 'image/png',
 					fileName: file.name,
-					profile: selectedProfile.name,
+					profile: 'Heritage Core',
 					engine: engineResult,
 				}),
 			});
@@ -145,221 +133,193 @@ export const ImageAnalyzer: React.FC = () => {
 
 	return (
 		<div className="w-full">
-			<div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-
-				{/* ── Two-column layout: stacked on mobile, side-by-side on lg ── */}
-				<div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[380px_minmax(0,1fr)] xl:grid-cols-[420px_minmax(0,1fr)]">
-
-					{/* ── LEFT PANEL: Upload + Profiles ── */}
-					<div className="flex flex-col gap-4">
-
-						{/* Profile selector */}
-						<div className="border border-white/10 bg-[#0d0d0d] p-4 sm:p-5">
-							<div className="mb-3 font-mono text-[10px] uppercase tracking-[0.24em] text-white/45">
-								Analysis Profile
+			<div className="mx-auto w-full max-w-[1400px]">
+				<div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-24">
+					
+					{/* ── LEFT PANEL: ACTIONS ── */}
+					<div className="flex flex-col gap-16 lg:col-span-5">
+						
+						{/* Upload Section */}
+						<div className="flex flex-col gap-6">
+							<div>
+								<h3 className="font-heritage text-3xl text-[var(--foreground)]">Analyze Pattern</h3>
+								<p className="mt-2 font-elegant text-sm text-[var(--muted)] leading-relaxed">
+									Upload a kolam photograph or digital drawing to determine structural validity.
+								</p>
 							</div>
-							<div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:grid-cols-1">
-								{ANALYSIS_PROFILES.map((profile) => (
-									<button
-										key={profile.id}
-										type="button"
-										onClick={() => setProfileId(profile.id)}
-										className={`border px-3 py-2.5 text-left transition-colors sm:px-4 sm:py-3 ${profileId === profile.id
-												? 'border-[var(--secondary)] bg-[var(--secondary)]/8'
-												: 'border-white/10 bg-white/[0.02] hover:border-white/20'
-											}`}
-									>
-										<div className="font-mono text-[10px] uppercase tracking-[0.2em] text-white sm:text-[11px]">
-											{profile.name}
+
+							<label className="group relative flex min-h-[280px] w-full cursor-pointer flex-col items-center justify-center overflow-hidden transition-all">
+								<div className="absolute inset-0 border border-dashed border-[var(--border-medium)] transition-colors group-hover:border-[var(--primary)]/60"></div>
+								<div className="absolute inset-0 bg-[var(--surface)] opacity-0 transition-opacity group-hover:opacity-40"></div>
+								
+								{previewUrl ? (
+									<img
+										src={previewUrl}
+										alt="Preview"
+										className="absolute inset-0 h-full w-full object-contain p-4 mix-blend-multiply opacity-80 transition-opacity group-hover:opacity-40"
+									/>
+								) : (
+									<div className="relative z-10 flex flex-col items-center gap-4 text-center">
+										<div className="flex h-16 w-16 items-center justify-center rounded-md bg-[var(--primary)]/10 text-[var(--primary)] transition-transform group-hover:-translate-y-1">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+												<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" strokeLinecap="round" strokeLinejoin="round"/>
+												<polyline points="17 8 12 3 7 8" strokeLinecap="round" strokeLinejoin="round"/>
+												<line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" strokeLinejoin="round"/>
+											</svg>
 										</div>
-										<div className="mt-0.5 text-xs text-white/55">{profile.description}</div>
-									</button>
-								))}
-							</div>
-						</div>
-
-						{/* Upload area */}
-						<div className="border border-white/10 bg-[#0d0d0d] p-4 sm:p-5">
-							<label className="flex min-h-[200px] cursor-pointer flex-col items-center justify-center gap-3 border border-dashed border-white/20 bg-white/[0.02] px-6 text-center transition-colors hover:border-[var(--secondary)] hover:bg-white/[0.04] sm:min-h-[240px]">
-								<div className="headline text-base text-white sm:text-lg">Upload Kolam Image</div>
-								<div className="text-xs text-white/50 sm:text-sm">JPG, PNG, or WEBP</div>
-								<div className="mt-1 border border-white/20 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--secondary)] sm:text-[11px]">
-									Select File
-								</div>
+										<div className="flex flex-col items-center gap-2 mt-4">
+											<span className="rounded-md bg-[var(--primary)] px-10 py-6 font-elegant text-sm font-semibold uppercase tracking-widest text-[var(--background)] shadow-md transition-all group-hover:shadow-lg group-hover:-translate-y-0.5">Select File</span>
+											<p className="mt-2 font-mono text-[10px] text-[var(--muted)]">JPG, PNG OR WEBP</p>
+										</div>
+									</div>
+								)}
 								<input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 							</label>
 
-							{/* Status messages */}
+							{/* Status Feedback */}
 							{isAnalyzing && (
-								<div className="mt-3 border border-white/10 bg-white/[0.03] px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.24em] text-white/60">
-									Running kolam analysis…
+								<div className="flex items-center gap-4 border-l-2 border-[var(--gold)] pl-4">
+									<span className="h-1.5 w-1.5 rounded-full bg-[var(--gold)] animate-pulse"></span>
+									<span className="font-elegant text-xs uppercase tracking-widest text-[var(--gold)]">Processing imagery...</span>
 								</div>
 							)}
 							{isAiAnalyzing && (
-								<div className="mt-3 border border-[var(--secondary)]/20 bg-[var(--secondary)]/6 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--secondary)]">
-									Model is refining the classification…
+								<div className="flex items-center gap-4 border-l-2 border-[var(--primary)] pl-4">
+									<span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)] animate-pulse"></span>
+									<span className="font-elegant text-xs uppercase tracking-widest text-[var(--primary)]">Neural classification...</span>
 								</div>
 							)}
 							{error && (
-								<div className="mt-3 border border-[#ff6b6b]/30 bg-[#ff6b6b]/8 px-4 py-2.5 text-sm text-[#ff9c9c]">
+								<div className="border-l-2 border-[var(--temple-red)] pl-4 text-sm text-[var(--temple-red)]">
 									{error}
 								</div>
 							)}
 						</div>
-
-						{/* Image preview */}
-						{previewUrl && (
-							<div className="overflow-hidden border border-white/10 bg-black">
-								<img
-									src={previewUrl}
-									alt="Uploaded preview"
-									className="h-auto max-h-64 w-full object-contain sm:max-h-80"
-								/>
-							</div>
-						)}
 					</div>
 
-					{/* ── RIGHT PANEL: Results ── */}
-					<div className="border border-white/10 bg-[#111] p-4 sm:p-5 lg:p-6">
-
-						{/* Results header */}
-						<div className="mb-5 flex flex-wrap items-start justify-between gap-3">
-							<h2 className="headline text-lg text-white sm:text-xl lg:text-2xl">
-								{analysis?.aiAnalysis ? 'Model Classification' : 'Kolam Classification'}
-							</h2>
-							{analysis && (
-								<div className="shrink-0 border border-[var(--secondary)]/30 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--secondary)]">
-									{analysis.aiAnalysis ? analysis.aiAnalysis.finalKolamType : analysis.kolamType}
+					{/* ── RIGHT PANEL: Output Report ── */}
+					<div className="lg:col-span-7">
+						{!analysis ? (
+							<div className="flex h-full min-h-[400px] flex-col justify-center border-t border-[var(--border-subtle)] lg:border-l lg:border-t-0 lg:pl-16">
+								<h2 className="font-heritage text-4xl text-[var(--foreground)] opacity-20 lg:text-5xl">Structural<br />Report</h2>
+								<div className="mt-8 flex items-center gap-6 opacity-40">
+									<div className="h-px w-16 bg-[var(--border-medium)]"></div>
+									<span className="font-elegant text-xs tracking-widest text-[var(--muted)]">AWAITING INPUT</span>
 								</div>
-							)}
-						</div>
-
-						{/* Empty state */}
-						{!analysis && (
-							<div className="flex min-h-[280px] items-center justify-center border border-dashed border-white/10 bg-white/[0.02] p-6 text-center text-sm text-white/35 sm:min-h-[360px]">
-								Upload a kolam image to generate model output.
 							</div>
-						)}
-
-						{/* Loading state */}
-						{analysis?.aiStatus === 'loading' && (
-							<div className="flex min-h-[200px] items-center justify-center border border-dashed border-white/10 bg-white/[0.02] p-6 text-center text-sm text-white/40">
-								Generating final analysis…
-							</div>
-						)}
-
-						{/* Error state */}
-						{analysis?.aiStatus === 'error' && (
-							<div className="border border-[#ff6b6b]/30 bg-[#ff6b6b]/8 p-4 text-sm text-[#ffb3b3]">
-								Unable to generate model output right now.
-								{analysis.aiError && <div className="mt-2 text-[#ff9c9c]">{analysis.aiError}</div>}
-							</div>
-						)}
-
-						{/* AI Analysis results */}
-						{analysis?.aiAnalysis && (
-							<div className="space-y-5">
-
-								{/* Core metrics grid */}
-								<div className="border border-[var(--secondary)]/20 bg-[var(--secondary)]/5 p-4 sm:p-5">
-									<div className="mb-3 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--secondary)]">
-										Model Final Analysis · {analysis.profileName}
+						) : (
+							<div className="flex h-full flex-col border-t border-[var(--border-subtle)] pt-12 lg:border-l lg:border-t-0 lg:pl-16 lg:pt-0">
+								
+								{/* Headers */}
+								<div className="mb-12">
+									<div className="mb-4 flex items-center justify-between">
+										<span className="font-elegant text-xs uppercase tracking-[0.3em] text-[var(--primary)]">
+											{analysis.aiAnalysis ? 'Neural Output' : 'Engine Output'}
+										</span>
+										<span className="font-mono text-[10px] text-[var(--muted)]">{analysis.fileName}</span>
 									</div>
-									<div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+									<h2 className="font-heritage text-4xl text-[var(--foreground)] lg:text-5xl">
+										{analysis.aiAnalysis ? analysis.aiAnalysis.finalKolamType : analysis.kolamType}
+									</h2>
+								</div>
+
+								{/* Core Metrics */}
+								{analysis.aiAnalysis && (
+									<div className="mb-16 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4">
 										{[
-											{ label: 'Final Type', value: analysis.aiAnalysis.finalKolamType },
 											{ label: 'Region', value: analysis.aiAnalysis.finalRegion },
 											{ label: 'Grid', value: analysis.aiAnalysis.finalGrid },
 											{ label: 'Nodes', value: String(analysis.aiAnalysis.finalNodes) },
 											{ label: 'Confidence', value: analysis.aiAnalysis.confidence },
-											{ label: 'Motif', value: analysis.aiAnalysis.motif },
-											{ label: 'Complexity', value: analysis.aiAnalysis.complexity },
-											{ label: 'Validity', value: analysis.aiAnalysis.validity },
 										].map(({ label, value }) => (
-											<div key={label}>
-												<div className="mb-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 sm:text-[10px]">
+											<div key={label} className="border-l border-[var(--border-subtle)] pl-4">
+												<div className="mb-2 font-elegant text-[10px] uppercase tracking-widest text-[var(--muted)]">
 													{label}
 												</div>
-												<div className="text-xs text-white sm:text-sm">{value}</div>
+												<div className="font-mono text-sm text-[var(--foreground)]">{value}</div>
 											</div>
 										))}
 									</div>
-								</div>
+								)}
 
-								{/* Assessments */}
-								<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-									<Section label="Symmetry Assessment">
-										{analysis.aiAnalysis.symmetryAssessment}
-									</Section>
-									<Section label="Structural Assessment">
-										{analysis.aiAnalysis.structuralAssessment}
-									</Section>
-								</div>
-
-								<Section label="Verification">
-									{analysis.aiAnalysis.verificationSummary}
-								</Section>
-
-								<Section label="Detailed Summary">
-									{analysis.aiAnalysis.detailedSummary}
-								</Section>
-
-								{/* Cultural context */}
-								<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-									<Section label="Regional Tradition">
-										{analysis.aiAnalysis.culturalContext.regionalTradition}
-									</Section>
-									<Section label="Ritual Significance">
-										{analysis.aiAnalysis.culturalContext.ritualSignificance}
-									</Section>
-								</div>
-
-								{/* Festivals */}
-								{analysis.aiAnalysis.culturalContext.possibleFestivals.length > 0 && (
-									<div>
-										<div className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-											Possible Festivals
+								{/* Narrative Analysis */}
+								{analysis.aiAnalysis && (
+									<div className="space-y-16">
+										<div>
+											<h4 className="mb-6 font-elegant text-xs uppercase tracking-widest text-[var(--gold)]">Detailed Summary</h4>
+											<p className="text-base leading-loose text-[var(--foreground)] opacity-90 text-justify">
+												{analysis.aiAnalysis.detailedSummary}
+											</p>
 										</div>
-										<div className="flex flex-wrap gap-2">
-											{analysis.aiAnalysis.culturalContext.possibleFestivals.map((f) => (
-												<span key={f} className="border border-white/10 bg-white/[0.04] px-2.5 py-1 text-xs text-white/80">
-													{f}
-												</span>
-											))}
+
+										<div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+											<div>
+												<h4 className="mb-4 flex items-center gap-3 font-elegant text-xs uppercase tracking-widest text-[var(--muted)]">
+													<span className="h-px w-6 bg-[var(--border-medium)]"></span> Structural Form
+												</h4>
+												<p className="text-sm leading-relaxed text-[var(--muted)]">
+													{analysis.aiAnalysis.structuralAssessment}
+												</p>
+											</div>
+											<div>
+												<h4 className="mb-4 flex items-center gap-3 font-elegant text-xs uppercase tracking-widest text-[var(--muted)]">
+													<span className="h-px w-6 bg-[var(--border-medium)]"></span> Symmetry Index
+												</h4>
+												<p className="text-sm leading-relaxed text-[var(--muted)]">
+													{analysis.aiAnalysis.symmetryAssessment}
+												</p>
+											</div>
 										</div>
+
+										<div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 border-t border-[var(--border-subtle)] pt-12">
+											<div>
+												<h4 className="mb-6 font-elegant text-xs uppercase tracking-widest text-[var(--foreground)]">Regional Context</h4>
+												<p className="text-sm leading-relaxed text-[var(--muted)]">
+													{analysis.aiAnalysis.culturalContext.regionalTradition}
+												</p>
+												{analysis.aiAnalysis.culturalContext.possibleFestivals.length > 0 && (
+													<div className="mt-4 flex flex-wrap gap-2">
+														{analysis.aiAnalysis.culturalContext.possibleFestivals.map(f => (
+															<span key={f} className="rounded-full border border-[var(--border-subtle)] px-3 py-1 font-elegant text-[10px] uppercase tracking-wider text-[var(--muted)]">{f}</span>
+														))}
+													</div>
+												)}
+											</div>
+											<div>
+												<h4 className="mb-6 font-elegant text-xs uppercase tracking-widest text-[var(--foreground)]">Ritual Significance</h4>
+												<p className="text-sm leading-relaxed text-[var(--muted)]">
+													{analysis.aiAnalysis.culturalContext.ritualSignificance}
+												</p>
+											</div>
+										</div>
+
+										{/* Recreation Guide */}
+										{analysis.aiAnalysis.recreationGuide.length > 0 && (
+											<div className="border-t border-[var(--border-subtle)] pt-12 pb-8">
+												<h4 className="mb-8 font-elegant text-xs uppercase tracking-widest text-[var(--primary)]">Recreation Protocol</h4>
+												<ol className="space-y-6">
+													{analysis.aiAnalysis.recreationGuide.map((step, i) => (
+														<li key={i} className="flex gap-6 border-l border-[var(--primary)]/20 pl-6">
+															<span className="shrink-0 font-mono text-[10px] text-[var(--primary)] pt-1">{String(i + 1).padStart(2, '0')}</span>
+															<span className="text-sm leading-relaxed text-[var(--foreground)] opacity-90">{step}</span>
+														</li>
+													))}
+												</ol>
+											</div>
+										)}
 									</div>
 								)}
 
-								{/* Archive tags */}
-								{analysis.aiAnalysis.culturalContext.archivalTags.length > 0 && (
-									<div>
-										<div className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-											Archive Tags
-										</div>
-										<div className="flex flex-wrap gap-2">
-											{analysis.aiAnalysis.culturalContext.archivalTags.map((tag) => (
-												<span key={tag} className="border border-white/10 px-2.5 py-1 text-xs text-white/65">
-													{tag}
-												</span>
-											))}
-										</div>
+								{analysis.aiStatus === 'loading' && (
+									<div className="mt-16 flex items-center gap-6">
+										<div className="h-px w-full max-w-[100px] bg-[var(--border-medium)]"></div>
+										<span className="font-elegant text-xs uppercase tracking-widest text-[var(--primary)]">Synthesizing full report...</span>
 									</div>
 								)}
 
-								{/* Recreation guide */}
-								{analysis.aiAnalysis.recreationGuide.length > 0 && (
-									<div>
-										<div className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-											Recreation Guide
-										</div>
-										<ol className="space-y-1.5">
-											{analysis.aiAnalysis.recreationGuide.map((step, i) => (
-												<li key={`${i}-${step}`} className="flex gap-3 text-sm leading-6 text-white/75">
-													<span className="shrink-0 font-mono text-[10px] text-white/30 pt-1">{String(i + 1).padStart(2, '0')}</span>
-													<span>{step}</span>
-												</li>
-											))}
-										</ol>
+								{analysis.aiStatus === 'error' && (
+									<div className="mt-16 border-l-2 border-[var(--temple-red)] pl-6 text-sm text-[var(--temple-red)]">
+										Algorithm verification failed: {analysis.aiError}
 									</div>
 								)}
 							</div>
